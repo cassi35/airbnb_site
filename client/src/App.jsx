@@ -3,17 +3,25 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './index.css'
 import axios from 'axios'
+import {Route,createBrowserRouter,createRoutesFromElements,Router,RouterProvider, Link} from 'react-router-dom'
 import { useEffect } from 'react'
+import Home from './pages/Home'
+import CreatePost from './pages/CreatePost'
+import Post from './pages/Post'
 function App() {
-  const [listOfPosts,setLisOfPosts] = useState([])
-  useEffect(()=>{
-    axios.get("http://localhost:3001/posts").then((response)=>{
-      setLisOfPosts(response.data)
-    })
-  },[])
+ 
+  const router = createBrowserRouter(
+    createRoutesFromElements(
+      <Route>
+        <Route path='/' element={<Home/>} />
+        <Route path='/createpost' element={<CreatePost/>} />
+        <Route path='/post/:id' element={<Post/>} />
+      </Route>
+    )
+  )
   return (
     <>
-  
+  <RouterProvider router={router}/>
     </>
   )
 }
