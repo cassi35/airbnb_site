@@ -13,3 +13,4 @@ app.listen(3000,()=>{
   sequelize init
 
 npm install mysql2
+npm install cors
