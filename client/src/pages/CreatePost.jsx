@@ -3,7 +3,9 @@ import { Link } from 'react-router-dom'
 import {Formik,Form,Field,ErrorMessage} from 'formik'
 import axios from 'axios'
 import * as Yup from 'yup'
+import { useNavigate } from 'react-router-dom'
 function CreatePost() {
+    const navigate = useNavigate() 
     const initialValues = {
         title:"",
         postText:"",
@@ -11,7 +13,7 @@ function CreatePost() {
     }
     const onsubmit = (data)=>{
         axios.post("http://localhost:3001/posts",data).then((response)=>{
-            console.log("itl worked")
+           navigate("/")
           })
     }
     const validationSchema = Yup.object().shape({
