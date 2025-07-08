@@ -14,4 +14,20 @@ npx playwright test
 npx playwright show-report
 npx playwright test --ui
 npm install @dnd-kit/core
-npm install @reduxjs/toolkit react-redux
+npm install @reduxjs/toolkit react-redux 
+--------------------------------
+npm init -y  
+npm install -D typescript tsx @types/node  
+npx tsc --init
+npm install fastify @fastify/cors @fastify/autoload 
+npm install @fastify/cookie @fastify/env @fastify/jwt
+npm install zod 
+npm install http-status-codes
+npm install @google-cloud/local-auth 
+npm install nodemon googleapis
+npm install @fastify/websocket socket.io
+npm install mongodb
+--------------------------------
+
+manda um redis de otp temporario  
+WebSocket de conversa
