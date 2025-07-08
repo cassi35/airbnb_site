@@ -4,8 +4,11 @@ import autoload from '@fastify/autoload'
 import path from 'path'
 import ck from 'chalk'
 import log from 'consola'
-const app = fastify({logger:true})
-
+import { ZodTypeProvider } from 'fastify-type-provider-zod'
+import { connectSwagger } from 'plugins/swegger'
+const app = fastify({logger:true}).withTypeProvider<ZodTypeProvider>()
+//swagger  
+app.register(connectSwagger) 
 //env 
 const PORT = process.env.PORT || 3000
 

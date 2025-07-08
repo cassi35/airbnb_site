@@ -3,7 +3,8 @@ const envSchema = z.object({
     PORT:z.number().default(3000),
     PASSSWORD_CLUSTER:z.string() ,
     USERNAME_CLUSTER:z.string(),
-    DATABASE_CONNECTION:z.string().url()
+    DATABASE_CONNECTION:z.string().url(),
+    HOST:z.string().url().default("http://localhost:3000/"),
 })
 type envSchema = z.infer<typeof envSchema>
 declare global{

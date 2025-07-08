@@ -27,6 +27,8 @@ npm install @google-cloud/local-auth
 npm install nodemon googleapis
 npm install @fastify/websocket socket.io
 npm install mongodb
+npm i @fastify/swagger @fastify/swagger-ui
+fastify-type-provider-zod
 --------------------------------
 
 manda um redis de otp temporario  

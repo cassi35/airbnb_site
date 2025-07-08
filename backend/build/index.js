@@ -9,7 +9,10 @@ const autoload_1 = __importDefault(require("@fastify/autoload"));
 const path_1 = __importDefault(require("path"));
 const chalk_1 = __importDefault(require("chalk"));
 const consola_1 = __importDefault(require("consola"));
-const app = (0, fastify_1.default)({ logger: true });
+const swegger_1 = require("plugins/swegger");
+const app = (0, fastify_1.default)({ logger: true }).withTypeProvider();
+//swagger  
+app.register(swegger_1.connectSwagger);
 //env 
 const PORT = process.env.PORT || 3000;
 //middleware gobais 
