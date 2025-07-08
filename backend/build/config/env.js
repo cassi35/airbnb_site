@@ -11,4 +11,4 @@ const envSchema = zod_1.default.object({
     DATABASE_CONNECTION: zod_1.default.string().url()
 });
 const parseEnv = envSchema.parse(process.env);
-process.env = Object.create(Object.assign(Object.assign({}, process.env), parseEnv));
+process.env = Object.create({ ...process.env, ...parseEnv });
