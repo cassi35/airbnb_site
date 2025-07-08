@@ -9,7 +9,7 @@ const autoload_1 = __importDefault(require("@fastify/autoload"));
 const path_1 = __importDefault(require("path"));
 const chalk_1 = __importDefault(require("chalk"));
 const consola_1 = __importDefault(require("consola"));
-const swegger_1 = require("plugins/swegger");
+const swegger_1 = require("./plugins/swegger");
 const app = (0, fastify_1.default)({ logger: true }).withTypeProvider();
 //swagger  
 app.register(swegger_1.connectSwagger);
@@ -31,9 +31,6 @@ app.addHook("onRoute", ({ method, path }) => {
     consola_1.default.success(`Route registered: ${chalk_1.default.yellow(method)} ${chalk_1.default.blue(path)}`);
 });
 //rotas 
-app.get('/', (req, res) => {
-    return res.send({ message: "Bem vindo ao AirBnb" });
-});
 //inializacao do servidor 
 app.listen({ port: PORT, host: "" })
     .then(() => {

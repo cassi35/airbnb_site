@@ -9,7 +9,7 @@ const envSchema = zod_1.default.object({
     PASSSWORD_CLUSTER: zod_1.default.string(),
     USERNAME_CLUSTER: zod_1.default.string(),
     DATABASE_CONNECTION: zod_1.default.string().url(),
-    HOST: zod_1.default.string().url().default("http://localhost:3000/"),
+    HOST: zod_1.default.string().url().default("localhost:3000"),
 });
 const parseEnv = envSchema.parse(process.env);
 process.env = Object.create({ ...process.env, ...parseEnv });

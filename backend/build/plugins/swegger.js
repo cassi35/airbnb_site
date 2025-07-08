@@ -8,29 +8,31 @@ const swagger_1 = __importDefault(require("@fastify/swagger"));
 const swagger_ui_1 = __importDefault(require("@fastify/swagger-ui"));
 const chalk_1 = __importDefault(require("chalk"));
 const consola_1 = __importDefault(require("consola"));
+const fastify_type_provider_zod_1 = require("fastify-type-provider-zod");
 const connectSwagger = async (app) => {
     try {
         await app.register(swagger_1.default, {
-            swagger: {
+            openapi: {
                 info: {
                     title: "AirBnb API",
                     description: "API for AirBnb clone",
                     version: "1.0.0"
                 },
-                host: process.env.HOST || "http://localhost:3000",
-                schemes: ["http"],
-                consumes: ["application/json"],
-                produces: ["application/json"],
-            }
+                servers: [{
+                        url: 'http://localhost:3000'
+                    }]
+            },
+            hideUntagged: false, // ⚠️ MUITO IMPORTANTE! Mostra rotas sem tags
+            transform: fastify_type_provider_zod_1.jsonSchemaTransform
         });
-        console.log(`${chalk_1.default.green("Swagger connected successfully")}`);
         await app.register(swagger_ui_1.default, {
             routePrefix: '/docs',
             uiConfig: {
-                docExpansion: "full",
+                docExpansion: "list",
                 deepLinking: true,
             }
         });
+        console.log(`${chalk_1.default.green("Swagger connected successfully")}`);
     }
     catch (error) {
         consola_1.default.error(`${chalk_1.default.red("Error connecting to Swagger")}`, error);

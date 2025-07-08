@@ -5,7 +5,7 @@ import path from 'path'
 import ck from 'chalk'
 import log from 'consola'
 import { ZodTypeProvider } from 'fastify-type-provider-zod'
-import { connectSwagger } from 'plugins/swegger'
+import { connectSwagger } from './plugins/swegger'
 const app = fastify({logger:true}).withTypeProvider<ZodTypeProvider>()
 //swagger  
 app.register(connectSwagger) 
@@ -31,9 +31,6 @@ app.addHook("onRoute",({method,path})=>{
     log.success(`Route registered: ${ck.yellow(method)} ${ck.blue(path)}`)
 })
 //rotas 
-app.get('/',(req,res)=>{
-    return res.send({message:"Bem vindo ao AirBnb"})
-})
 //inializacao do servidor 
 
 app.listen({port:PORT,host:""})

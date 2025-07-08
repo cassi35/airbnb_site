@@ -4,7 +4,7 @@ const envSchema = z.object({
     PASSSWORD_CLUSTER:z.string() ,
     USERNAME_CLUSTER:z.string(),
     DATABASE_CONNECTION:z.string().url(),
-    HOST:z.string().url().default("http://localhost:3000/"),
+    HOST:z.string().url().default("localhost:3000"),
 })
 type envSchema = z.infer<typeof envSchema>
 declare global{
