@@ -9,8 +9,16 @@ const autoload_1 = __importDefault(require("@fastify/autoload"));
 const path_1 = __importDefault(require("path"));
 const chalk_1 = __importDefault(require("chalk"));
 const consola_1 = __importDefault(require("consola"));
+const jwt_1 = __importDefault(require("@fastify/jwt"));
 const swegger_1 = require("./plugins/swegger");
+const database_1 = require("database");
+const cookie_1 = __importDefault(require("@fastify/cookie"));
 const app = (0, fastify_1.default)({ logger: true }).withTypeProvider();
+//registrando o plugin de cookie 
+app.register(cookie_1.default, {
+    secret: process.env.COOKIE_SECRET || 'my-secret', // para cookies assinados
+    hook: 'onRequest', // opcional, define quando os cookies serão analisados
+});
 //swagger  
 app.register(swegger_1.connectSwagger);
 //env 
@@ -23,6 +31,11 @@ app.register(autoload_1.default, {
 });
 // middleare de tratamento 
 //conectando ao banco de dados 
+app.register(database_1.connectDB);
+//middleware de autenticação
+app.register(jwt_1.default, {
+    secret: process.env.JWT_SECRET
+});
 //hooks 
 app.addHook("onRoute", ({ method, path }) => {
     if (method == "HEAD" || method == "OPTIONS") {

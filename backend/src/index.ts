@@ -4,9 +4,17 @@ import autoload from '@fastify/autoload'
 import path from 'path'
 import ck from 'chalk'
 import log from 'consola'
+import fastifyJwt from '@fastify/jwt'
 import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { connectSwagger } from './plugins/swegger'
+import { connectDB } from 'database'
+import cookie from '@fastify/cookie'
 const app = fastify({logger:true}).withTypeProvider<ZodTypeProvider>()
+//registrando o plugin de cookie 
+app.register(cookie, {
+  secret: process.env.COOKIE_SECRET || 'my-secret', // para cookies assinados
+  hook: 'onRequest', // opcional, define quando os cookies serão analisados
+})
 //swagger  
 app.register(connectSwagger) 
 //env 
@@ -22,7 +30,11 @@ app.register(autoload,{
 // middleare de tratamento 
 
 //conectando ao banco de dados 
-
+app.register(connectDB)
+//middleware de autenticação
+app.register(fastifyJwt,{
+    secret: process.env.JWT_SECRET
+})
 //hooks 
 app.addHook("onRoute",({method,path})=>{
     if(method == "HEAD" || method == "OPTIONS"){

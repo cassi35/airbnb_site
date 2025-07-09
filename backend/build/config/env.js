@@ -10,6 +10,11 @@ const envSchema = zod_1.default.object({
     USERNAME_CLUSTER: zod_1.default.string(),
     DATABASE_CONNECTION: zod_1.default.string().url(),
     HOST: zod_1.default.string().url().default("localhost:3000"),
+    JWT_SECRET: zod_1.default.string(),
+    STMP_USER: zod_1.default.string().email(),
+    STMP_PASS: zod_1.default.string(),
+    NODE_ENV: zod_1.default.enum(['development', 'production']).default('development'),
+    SENDER_EMAIL: zod_1.default.string().email()
 });
 const parseEnv = envSchema.parse(process.env);
 process.env = Object.create({ ...process.env, ...parseEnv });

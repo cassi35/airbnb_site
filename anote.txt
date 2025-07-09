@@ -29,6 +29,8 @@ npm install @fastify/websocket socket.io
 npm install mongodb
 npm i @fastify/swagger @fastify/swagger-ui
 fastify-type-provider-zod
+npm i @fastify/cookie
+ npm install --save-dev @types/nodemailer 
 --------------------------------
 
 manda um redis de otp temporario  
