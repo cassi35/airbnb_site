@@ -7,14 +7,16 @@ exports.welcomeEmail = exports.sendVerificationToken = void 0;
 const console_1 = __importDefault(require("console"));
 const nodemailer_1 = require("../config/nodemailer");
 const emailTemplate_1 = require("./emailTemplate");
-const sendVerificationToken = async (email, token) => {
+const sendVerificationToken = async (token, email) => {
     try {
         const mailOptions = {
             from: process.env.SENDER_EMAIL,
             to: email,
             subject: 'Verify your email',
-            text: (0, emailTemplate_1.templateEmailVerify)(token)
+            html: (0, emailTemplate_1.templateEmailVerify)(token)
         };
+        console_1.default.info('Tentando enviar email para:', email);
+        console_1.default.info('Usando remetente:', process.env.SENDER_EMAIL);
         await nodemailer_1.transporter.sendMail(mailOptions);
         console_1.default.info('Verification email sent successfully to:', email);
     }

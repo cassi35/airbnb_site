@@ -1,14 +1,24 @@
 import { FastifyInstance } from "fastify";
-// Importe o tipo correto que inclui setCookie
 import { FastifyReply } from "fastify";
 
-export const generateToken = (app: FastifyInstance, id: string, reply: FastifyReply): string => {
-    const token = app.jwt.sign({ id }, { expiresIn: "1d" });
+// Apenas gera o token JWT
+export const generateJWT = (app: FastifyInstance, id: string): string => {
+    return app.jwt.sign({ id }, { expiresIn: "1d" });
+};
+
+// Configura cookie (usado apenas nas rotas)
+export const setTokenCookie = (reply: FastifyReply, token: string): void => {
     reply.setCookie('token', token, {
-         httpOnly: true,
-         secure: process.env.NODE_ENV === 'production',
-         sameSite: "strict",
-         maxAge: 7 * 24 * 60 * 60 * 1000
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: "strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000
     });
+};
+
+// Função completa (para uso nas rotas)
+export const generateToken = (app: FastifyInstance, id: string, reply: FastifyReply): string => {
+    const token = generateJWT(app, id);
+    setTokenCookie(reply, token);
     return token;
-}
+};

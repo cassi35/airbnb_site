@@ -11,8 +11,8 @@ const envSchema = zod_1.default.object({
     DATABASE_CONNECTION: zod_1.default.string().url(),
     HOST: zod_1.default.string().url().default("localhost:3000"),
     JWT_SECRET: zod_1.default.string(),
-    STMP_USER: zod_1.default.string().email(),
-    STMP_PASS: zod_1.default.string(),
+    SMTP_USER: zod_1.default.string().email(),
+    SMTP_PASS: zod_1.default.string(),
     NODE_ENV: zod_1.default.enum(['development', 'production']).default('development'),
     SENDER_EMAIL: zod_1.default.string().email(),
     REDIS_URL: zod_1.default.string().url().optional()

@@ -8,14 +8,16 @@ interface MailOptions{
     text?: string;
     html?: string;
 }
-export const sendVerificationToken = async (email:string,token:string):Promise<void>=>{
+export const sendVerificationToken = async (token:string,email:string):Promise<void>=>{
     try {
         const mailOptions:MailOptions = {
             from:process.env.SENDER_EMAIL,
             to:email,
             subject:'Verify your email',
-            text:templateEmailVerify(token)
+            html:templateEmailVerify(token)
         }
+        log.info('Tentando enviar email para:', email);
+        log.info('Usando remetente:', process.env.SENDER_EMAIL);
         await transporter.sendMail(mailOptions)
         log.info('Verification email sent successfully to:', email);
     } catch (error) {

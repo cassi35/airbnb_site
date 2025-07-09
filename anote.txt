@@ -32,6 +32,8 @@ fastify-type-provider-zod
 npm i @fastify/cookie
  npm install --save-dev @types/nodemailer 
  npm install @fastify/redis ioredis
+ npm install @fastify/cookie
+ npm i fastify-bcrypt
 --------------------------------
 
 manda um redis de otp temporario  
