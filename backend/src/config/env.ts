@@ -12,6 +12,8 @@ const envSchema = z.object({
     SENDER_EMAIL:z.string().email(),
     REDIS_URL:z.string().url().optional(),
     RESEND_API_KEY:z.string().optional(),
+    SENDER_EMAIL_FROM_GMAIL:z.string().email().optional(),
+    SENHA_DE_APP:z.string().optional(),
 })
 type envSchema = z.infer<typeof envSchema>
 declare global{

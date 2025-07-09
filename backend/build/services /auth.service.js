@@ -38,7 +38,16 @@ class AuthService {
                 provider: 'local'
             };
             const cache = new redis_service_1.default(this.app, 'auth:');
-            await (0, email_1.sendVerificationToken)(tokenVerification, userData.email);
+            const teste = await (0, email_1.sendVerificationToken)(tokenVerification, userData.email);
+            if (!teste) {
+                consola_1.default.error(chalk_1.default.red('Failed to send verification email'));
+                return {
+                    status: 'error',
+                    success: false,
+                    message: 'Failed to send verification email',
+                    verified: false
+                };
+            }
             await cache.set(`verify:${userData.email}`, //primeiro enviar email
             JSON.stringify(tempUser), 300); // 5 minutos de cache
             consola_1.default.success(chalk_1.default.green('Verification token sent to:', userData.email));

@@ -42,8 +42,16 @@ class AuthService{
       }
       const cache = new CacheService(this.app, 'auth:')
      
-      await sendVerificationToken(tokenVerification,userData.email)
-      
+      const teste = await sendVerificationToken(tokenVerification,userData.email)
+      if(!teste){
+        log.error(ck.red('Failed to send verification email'))
+        return {
+          status: 'error',
+          success: false,
+          message: 'Failed to send verification email',
+          verified: false
+        }
+      }
       await cache.set(  `verify:${userData.email}`,  //primeiro enviar email
       JSON.stringify(tempUser),300) // 5 minutos de cache
       log.success(ck.green('Verification token sent to:', userData.email))

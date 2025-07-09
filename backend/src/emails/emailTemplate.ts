@@ -14,7 +14,7 @@ export const templateEmailVerify = (token:string):string => {
           <table role="presentation" cellpadding="0" cellspacing="0" width="600" style="background:#ffffff; border-radius:12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
             <tr>
               <td style="background-color:#3b82f6; color:#ffffff; text-align:center; padding:20px; border-top-left-radius:12px; border-top-right-radius:12px;">
-                <h2 style="margin:0;">Easy English</h2>
+                <h2 style="margin:0;">airbnb</h2>
               </td>
             </tr>
             <tr>

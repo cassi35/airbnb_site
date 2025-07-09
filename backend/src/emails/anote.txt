@@ -1,0 +1,57 @@
+resend
+import  log  from 'console'
+import {Resend} from 'resend'
+import { templateEmailVerify, templateEmailWelcome } from './emailTemplate';
+const resend = new Resend(process.env.RESEND_API_KEY)
+interface MailOptions{
+    from: string;
+    to: string[];
+    subject: string;
+    html: string;
+}
+export const sendVerificationToken = async (token:string,email:string):Promise<void>=>{
+    try {
+        const mailOptions:MailOptions = {
+            from:process.env.SENDER_EMAIL,
+            to:[email],
+            subject:'Verify your email',
+            html:templateEmailVerify(token)
+        }
+        log.info('Tentando enviar email para:', email);
+        const {error,data} = await resend.emails.send(mailOptions);
+        if (error) {
+            log.error('Error sending email:', error);
+            throw new Error('Failed to send verification email');
+        }
+        if(!data) {
+            log.error('No data returned from email send operation');
+            throw new Error('No data returned from email send operation');
+
+        }
+        log.info('Verification email sent successfully to:', email);
+    } catch (error) {
+        log.error('Error sending verification token:', error);
+    }
+}
+export const welcomeEmail = async (email:string):Promise<void>=>{
+    try {
+        const mailOptions:MailOptions = {
+            from: process.env.SENDER_EMAIL,
+            to: [email],
+            subject: 'Welcome to Our Service',
+            html: templateEmailWelcome(email)
+        }
+        const {error,data} = await resend.emails.send(mailOptions);
+        if (error) {
+            log.error('Error sending welcome email:', error);
+            throw new Error('Failed to send welcome email');
+        }
+        if(!data){
+            log.error('No data returned from welcome email send operation');
+            throw new Error('No data returned from welcome email send operation');
+        }
+        log.info('Welcome email sent successfully to:', email);
+    } catch (error) {
+        log.error('Error sending welcome email:', error);
+    }
+}

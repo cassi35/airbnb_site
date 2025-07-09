@@ -15,7 +15,10 @@ const envSchema = zod_1.default.object({
     SMTP_PASS: zod_1.default.string(),
     NODE_ENV: zod_1.default.enum(['development', 'production']).default('development'),
     SENDER_EMAIL: zod_1.default.string().email(),
-    REDIS_URL: zod_1.default.string().url().optional()
+    REDIS_URL: zod_1.default.string().url().optional(),
+    RESEND_API_KEY: zod_1.default.string().optional(),
+    SENDER_EMAIL_FROM_GMAIL: zod_1.default.string().email().optional(),
+    SENHA_DE_APP: zod_1.default.string().optional(),
 });
 const parseEnv = envSchema.parse(process.env);
 process.env = Object.create({ ...process.env, ...parseEnv });
