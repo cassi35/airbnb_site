@@ -21,3 +21,5 @@ class AuthService {
         }
     }
 }
+exports.default = AuthService;
+//colocar redis aqul
