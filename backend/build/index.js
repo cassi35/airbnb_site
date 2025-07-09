@@ -13,6 +13,7 @@ const jwt_1 = __importDefault(require("@fastify/jwt"));
 const swegger_1 = require("./plugins/swegger");
 const database_1 = require("database");
 const cookie_1 = __importDefault(require("@fastify/cookie"));
+const redis_1 = require("plugins/redis");
 const app = (0, fastify_1.default)({ logger: true }).withTypeProvider();
 //registrando o plugin de cookie 
 app.register(cookie_1.default, {
@@ -32,6 +33,7 @@ app.register(autoload_1.default, {
 // middleare de tratamento 
 //conectando ao banco de dados 
 app.register(database_1.connectDB);
+app.register(redis_1.connectRedis);
 //middleware de autenticação
 app.register(jwt_1.default, {
     secret: process.env.JWT_SECRET

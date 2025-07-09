@@ -9,6 +9,7 @@ import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { connectSwagger } from './plugins/swegger'
 import { connectDB } from 'database'
 import cookie from '@fastify/cookie'
+import { connectRedis } from 'plugins/redis'
 const app = fastify({logger:true}).withTypeProvider<ZodTypeProvider>()
 //registrando o plugin de cookie 
 app.register(cookie, {
@@ -31,6 +32,7 @@ app.register(autoload,{
 
 //conectando ao banco de dados 
 app.register(connectDB)
+app.register(connectRedis)
 //middleware de autenticação
 app.register(fastifyJwt,{
     secret: process.env.JWT_SECRET

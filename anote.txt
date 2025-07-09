@@ -31,6 +31,7 @@ npm i @fastify/swagger @fastify/swagger-ui
 fastify-type-provider-zod
 npm i @fastify/cookie
  npm install --save-dev @types/nodemailer 
+ npm install @fastify/redis ioredis
 --------------------------------
 
 manda um redis de otp temporario  
