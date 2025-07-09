@@ -73,7 +73,63 @@ class AuthService{
         return response as StatusResponse
     }
   }
-   
+  async verifyEmail(token:string,email:string):Promise<StatusResponse>{
+      try {
+        
+      } catch (error) {
+        
+      }
+  }
+  async resendVerificationEmail(email:string):Promise<StatusResponse>{
+      try {
+        
+      } catch (error) {
+        
+      }
+  }
+  async login(email:string,password:string):Promise<StatusResponse>{
+      try {
+        
+      } catch (error) {
+        
+      }
+  }
+  async resetPassword(email:string):Promise<StatusResponse>{
+    try {
+      
+    } catch (error) {
+      
+    }
+  }
+  async updatePassword(email:string,newPassword:string):Promise<StatusResponse>{
+      try {
+        
+      } catch (error) {
+        
+      }
+  }
+  async deleteUser(email:string):Promise<StatusResponse>{
+      try {
+        
+      } catch (error) {
+        
+      }
+  }
+  async getUser(email:string):Promise<User | null>{
+    try {
+      
+    } catch (error) {
+      
+    }
+  }
+  async updateUser(email:string,updateUser:Partial<User>):Promise<StatusResponse>{
+    try {
+      
+    } catch (error) {
+      
+    }
+  }
+
 }
 export default AuthService
 //colocar redis aqul
