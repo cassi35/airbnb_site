@@ -10,7 +10,8 @@ const envSchema = z.object({
     SMTP_PASS:z.string(),
     NODE_ENV:z.enum(['development', 'production']).default('development'),
     SENDER_EMAIL:z.string().email(),
-    REDIS_URL:z.string().url().optional()
+    REDIS_URL:z.string().url().optional(),
+    RESEND_API_KEY:z.string().optional(),
 })
 type envSchema = z.infer<typeof envSchema>
 declare global{
