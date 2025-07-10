@@ -5,12 +5,9 @@ import ck from 'chalk'
 import CacheService from "../services /redis.service";
 import { generateVerificationToken } from "token/generateVerificationToken";
 import { sendVerificationToken } from "emails/email";
-export interface StatusResponse{
-  status:string,
-  success:boolean,
-  message:string
-  verified:boolean
-}
+import type { StatusResponse } from "interface/responses";
+
+type  createUserResponse = StatusResponse
 class AuthService{
     private app:FastifyInstance
     private userCollection:any 
@@ -20,7 +17,7 @@ class AuthService{
         this.userCollection = this.app.mongo.db?.collection("users")
         this.redis = this.app.redis
       }
-  async createUser(userData: Omit<User, '_id' | 'verified' | 'createdAt' | 'updatedAt'>): Promise<StatusResponse> {
+  async createUser(userData: Omit<User, '_id' | 'verified' | 'createdAt' | 'updatedAt'>): Promise<createUserResponse> {
     try {
         const existsUser = await this.userCollection.find({ email: userData.email })
         .toArray()
@@ -41,27 +38,43 @@ class AuthService{
         provider:'local'
       }
       const cache = new CacheService(this.app, 'auth:')
-     
+      // Verificação do cache
+      const userExistsInCache = await cache.get<User>(`verify:${userData.email}`)
+     if(userExistsInCache){
+        log.warn(ck.yellow('User already exists in cache:', userData.email))
+        const errorResponse:createUserResponse  =  {
+          status: 'error',
+          success: false,
+          message: 'User already exists in cache',
+          verified: false
+        }
+        return errorResponse
+      }
+      // Envio do email
       const teste = await sendVerificationToken(tokenVerification,userData.email)
       if(!teste){
         log.error(ck.red('Failed to send verification email'))
-        return {
+        const errorResponse:createUserResponse  =  {
           status: 'error',
           success: false,
           message: 'Failed to send verification email',
           verified: false
         }
+        return errorResponse
       }
+      // Salvar no cache
       await cache.set(  `verify:${userData.email}`,  //primeiro enviar email
       JSON.stringify(tempUser),300) // 5 minutos de cache
       log.success(ck.green('Verification token sent to:', userData.email))
-      const response:StatusResponse = {
+     const response:StatusResponse = {
+        user: tempUser,
+        token: tokenVerification,
+        verified: false,
         status: 'pending',
         success: true,
-        message: 'User created successfully, please verify your email',
-        verified: false
-      } 
-      return response as StatusResponse
+        message: 'User created'
+     }
+      return response 
       } catch (error) {
         const response:StatusResponse = {
           status: 'error',
@@ -70,65 +83,10 @@ class AuthService{
           verified: false
         }
         log.error(ck.red('Error creating user:', error))
-        return response as StatusResponse
+        return response 
     }
   }
-  async verifyEmail(token:string,email:string):Promise<StatusResponse>{
-      try {
-        
-      } catch (error) {
-        
-      }
-  }
-  async resendVerificationEmail(email:string):Promise<StatusResponse>{
-      try {
-        
-      } catch (error) {
-        
-      }
-  }
-  async login(email:string,password:string):Promise<StatusResponse>{
-      try {
-        
-      } catch (error) {
-        
-      }
-  }
-  async resetPassword(email:string):Promise<StatusResponse>{
-    try {
-      
-    } catch (error) {
-      
-    }
-  }
-  async updatePassword(email:string,newPassword:string):Promise<StatusResponse>{
-      try {
-        
-      } catch (error) {
-        
-      }
-  }
-  async deleteUser(email:string):Promise<StatusResponse>{
-      try {
-        
-      } catch (error) {
-        
-      }
-  }
-  async getUser(email:string):Promise<User | null>{
-    try {
-      
-    } catch (error) {
-      
-    }
-  }
-  async updateUser(email:string,updateUser:Partial<User>):Promise<StatusResponse>{
-    try {
-      
-    } catch (error) {
-      
-    }
-  }
+ 
 
 }
 export default AuthService
