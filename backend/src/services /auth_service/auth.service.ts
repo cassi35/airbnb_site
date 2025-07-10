@@ -2,7 +2,7 @@ import { FastifyInstance } from "fastify";
 import { User } from "interface/auth";
 import log from 'consola'
 import ck from 'chalk'
-import CacheService from "../services /redis.service";
+import CacheService from "./redis.service";
 import { generateVerificationToken } from "token/generateVerificationToken";
 import { sendVerificationToken } from "emails/email";
 import type { StatusResponse } from "interface/responses";

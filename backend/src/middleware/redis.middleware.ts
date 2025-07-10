@@ -1,5 +1,5 @@
 import { FastifyRequest, FastifyReply, HookHandlerDoneFunction } from 'fastify';
-import CacheService from 'services /redis.service';
+import CacheService from 'services /auth_service/redis.service';
 export function createCacheMiddleware(app: any, ttl: number = 300) {
   const cacheService = new CacheService(app);
   

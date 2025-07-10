@@ -3,7 +3,7 @@ import ck from "chalk";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { StatusCodes } from "http-status-codes";
 import { User } from "interface/auth";
-import AuthService from "services /auth.service";
+import AuthService from "services /auth_service/auth.service";
 import { StatusResponse } from "interface/responses";
 
 interface UserBody {
