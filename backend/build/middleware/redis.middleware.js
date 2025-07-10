@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createCacheMiddleware = createCacheMiddleware;
-const redis_service_1 = __importDefault(require("services /redis.service"));
+const redis_service_1 = __importDefault(require("services /auth_service/redis.service"));
 function createCacheMiddleware(app, ttl = 300) {
     const cacheService = new redis_service_1.default(app);
     return async (request, reply) => {

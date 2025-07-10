@@ -16,9 +16,7 @@ export const setTokenCookie = (reply: FastifyReply, token: string): void => {
     });
 };
 
-// Função completa (para uso nas rotas)
-export const generateToken = (app: FastifyInstance, id: string, reply: FastifyReply): string => {
-    const token = generateJWT(app, id);
-    setTokenCookie(reply, token);
-    return token;
+// Função modificada para não precisar do reply
+export const generateToken = (app: FastifyInstance, id: string): string => {
+    return generateJWT(app, id);
 };

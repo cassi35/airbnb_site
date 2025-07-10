@@ -4,10 +4,12 @@ import log from 'consola'
 import ck from 'chalk'
 import CacheService from "./redis.service";
 import { generateVerificationToken } from "token/generateVerificationToken";
-import { sendVerificationToken } from "emails/email";
+import { sendVerificationToken, welcomeEmail } from "emails/email";
 import type { StatusResponse } from "interface/responses";
+import { generateToken, setTokenCookie } from "token/generateToken";
 
 type  createUserResponse = StatusResponse
+type verifyTokenResponse = StatusResponse
 class AuthService{
     private app:FastifyInstance
     private userCollection:any 
@@ -34,7 +36,7 @@ class AuthService{
         createdAt: new Date(),
         updatedAt: new Date(),
         verificationToken: tokenVerification,
-        role:'user',
+        role:'user', // Default to 'user' if role is not provided
         provider:'local'
       }
       const cache = new CacheService(this.app, 'auth:')
@@ -63,8 +65,7 @@ class AuthService{
         return errorResponse
       }
       // Salvar no cache
-      await cache.set(  `verify:${userData.email}`,  //primeiro enviar email
-      JSON.stringify(tempUser),300) // 5 minutos de cache
+     await cache.set(`verify:${userData.email}`, tempUser, 300) // Expira em 5 minutos
       log.success(ck.green('Verification token sent to:', userData.email))
      const response:StatusResponse = {
         user: tempUser,
@@ -84,6 +85,113 @@ class AuthService{
         }
         log.error(ck.red('Error creating user:', error))
         return response 
+    }
+  }
+  async verifyToken(token:string,email:string):Promise<verifyTokenResponse>{
+    try {
+      const cache = new CacheService(this.app, 'auth:')
+      const userData = await cache.get<User>(`verify:${email}`)
+      if(!userData){
+        log.warn(ck.yellow('User not found in cache:', email))
+        const errorResponse:verifyTokenResponse = {
+          status: 'error',
+          success: false,
+          message: 'User not found in cache',
+          verified: false
+        }
+        return errorResponse
+      }
+      if(userData.verificationToken != token){
+        log.warn(ck.yellow('Invalid verification token:', token))
+      console.log('=== DEBUG REDIS ===')
+      console.log('Email buscado:', email)
+      console.log('Dados do cache:', userData)
+      console.log('Token enviado:', token)
+      console.log('Token no cache:', userData?.verificationToken)
+      console.log('==================')
+         const errorResponse:verifyTokenResponse = {
+          status: 'error',
+          success: false,
+          message: 'Invalid verification token',
+          verified: false
+        }
+        return errorResponse
+      }
+      // Atualizar o usuário no banco de dados
+      const user = await cache.get<User>(`verify:${email}`)
+    
+      if(!user)
+      {
+        log.warn(ck.yellow('User not found in cache:', email))
+        const errorResponse:verifyTokenResponse = {
+          status: 'error',
+          success: false,
+          message: 'User not found in cache',
+          verified: false
+        }
+        return errorResponse
+      }
+      const newUser:Omit<User, '_id'> = {
+        ...user,
+        verified: true,
+        verificationToken: undefined, // Limpar o token de verificação
+        updatedAt: new Date()
+      }
+     const result = await this.app.mongo.db?.collection('users').insertOne(newUser)
+      if(!result?.acknowledged && !result?.insertedId){
+        log.error(ck.red('Failed to update user in database:', email))
+        const errorResponse:verifyTokenResponse = {
+          status: 'error',
+          success: false,
+          message: 'error to insert user in database',
+          verified: false
+        }
+        return errorResponse
+      }
+      //remove do cache 
+      await cache.del(`verify:${email}`)
+      const userDeleted  = await cache.get<User>(`user:${email}`)
+      if(userDeleted){
+        log.warn(ck.yellow('User still exists in cache after deletion:', email))
+        const errorResponse:verifyTokenResponse = {
+          status: 'error',
+          success: false,
+          message: 'User still exists in cache after deletion',
+          verified: false
+        }
+        return errorResponse
+      }
+      const sendWelcomeEmail = await welcomeEmail(user.email)
+      if(!sendWelcomeEmail){
+        log.error(ck.red('Failed to send welcome email'))
+        const errorResponse:verifyTokenResponse = {
+          status: 'error',
+          success: false,
+          message: 'Failed to send welcome email',
+          verified: false
+        }
+        return errorResponse
+      }
+      const tokenCookie = generateToken(this.app,result.insertedId.toString())
+      
+      const responseSucess:verifyTokenResponse = {
+        user: newUser,
+        status: 'success',
+        success: true,
+        message: 'User verified successfully',
+        verified: true,
+        token: tokenCookie // Retorna o token JWT
+      }
+      return responseSucess
+    } catch (error) {
+      log.error(ck.red('Error verifying token:', error))
+      const errorResponse:verifyTokenResponse = {
+        status: 'error',
+        success: false,
+        message: 'Failed to verify token',
+        verified: false
+      }
+      return errorResponse
     }
   }
  

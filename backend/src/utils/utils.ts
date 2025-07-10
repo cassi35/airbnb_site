@@ -1,5 +1,5 @@
 import {DefineRoutesHandler} from '../types/type'
-import { FastifyBaseLogger, RawReplyDefaultExpression, FastifyInstance,RawRequestDefaultExpression, RawServerDefault } from "fastify";
+import { FastifyBaseLogger, RawReplyDefaultExpression, FastifyInstance,RawRequestDefaultExpression, RawServerDefault, FastifyReply } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 
 export type FastifyTypeInstance = FastifyInstance<

@@ -16,10 +16,8 @@ const setTokenCookie = (reply, token) => {
     });
 };
 exports.setTokenCookie = setTokenCookie;
-// Função completa (para uso nas rotas)
-const generateToken = (app, id, reply) => {
-    const token = (0, exports.generateJWT)(app, id);
-    (0, exports.setTokenCookie)(reply, token);
-    return token;
+// Função modificada para não precisar do reply
+const generateToken = (app, id) => {
+    return (0, exports.generateJWT)(app, id);
 };
 exports.generateToken = generateToken;
