@@ -7,10 +7,12 @@ import { generateVerificationToken } from "token/generateVerificationToken";
 import { sendVerificationToken, welcomeEmail } from "emails/email";
 import type { StatusResponse } from "interface/responses";
 import { generateToken, setTokenCookie } from "token/generateToken";
+import { ObjectId } from "mongodb";
 
 type  createUserResponse = StatusResponse
 type verifyTokenResponse = StatusResponse
 type LoginResponse = StatusResponse & { token?: string, user?: User }
+type UserMongoDB = Omit<User,'id'> & {_id:ObjectId}
 class AuthService{
     private app:FastifyInstance
     private userCollection:any 
@@ -346,7 +348,9 @@ async forgotPassword(email:string):Promise<StatusResponse>{
 async resetPassword(token: string, email: string, newPassword: string): Promise<StatusResponse> {
     try {
       const cache = new CacheService(this.app, 'auth:')
-      const userData = await cache.get<User>(`verify:${email}`)
+      
+      // Usar o tipo específico do MongoDB
+      const userData = await cache.get<UserMongoDB>(`verify:${email}`)
       if (!userData || userData.resetPasswordToken !== token || !userData.resetPasswordExpires || userData.resetPasswordExpires < new Date()) {
         log.warn(ck.yellow('Invalid or expired reset password token:', token))
         return {
@@ -356,15 +360,24 @@ async resetPassword(token: string, email: string, newPassword: string): Promise<
           verified: false
         }
       }
+      
       const hashedPassword = await this.app.bcrypt.hash(newPassword)
-      const updatedUser: Omit<User, '_id'> = {
-        ...userData,
-        password: hashedPassword,
-        resetPasswordToken: undefined,
-        resetPasswordExpires: undefined,
-        updatedAt: new Date()
-      }
-      const result = await this.app.mongo.db?.collection('users').updateOne({ email }, { $set: updatedUser })
+      
+      // Fazer update apenas dos campos necessários
+      const result = await this.app.mongo.db?.collection('users').updateOne(
+        { email }, 
+        { 
+          $set: {
+            password: hashedPassword,
+            updatedAt: new Date()
+          },
+          $unset: {
+            resetPasswordToken: "",
+            resetPasswordExpires: ""
+          }
+        }
+      )
+      
       if (!result?.acknowledged) {
         log.error(ck.red('Failed to update user password in database:', email))
         return {
@@ -374,10 +387,18 @@ async resetPassword(token: string, email: string, newPassword: string): Promise<
           verified: false
         }
       }
+      
       await cache.del(`verify:${email}`)
       log.success(ck.green('User password reset successfully:', email))
+      
       return {
-        user: updatedUser,
+        user: {
+          ...userData,
+          password: hashedPassword,
+          resetPasswordToken: undefined,
+          resetPasswordExpires: undefined,
+          updatedAt: new Date()
+        },
         status: 'success',
         success: true,
         message: 'Password reset successfully',

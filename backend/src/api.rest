@@ -3,7 +3,7 @@ POST http://localhost:3000/auth/signup
 Content-Type: application/json
 
 {
-    "email": "emprego1231231@gmail.com",
+    "email": "sobralcassique@gmail.com",
     "password": "TesteReal",
     "name": "Cassiano5"
 }
@@ -12,8 +12,8 @@ POST http://localhost:3000/auth/verify-email
 Content-Type: application/json
 
 {
-    "email": "emprego1231231@gmail.com",
-    "verificationToken":"54034"
+    "email": "sobralcassique@gmail.com",
+    "verificationToken":"14882"
 }
 
 ### resend verification token / signup or password
@@ -21,7 +21,7 @@ POST http://localhost:3000/auth/resend-verification-token
 Content-Type: application/json
 
 {
-    "email":"emprego1231231@gmail.com",
+    "email":"sobralcassique@gmail.com",
     "type":"verification"
 }
 
@@ -30,8 +30,8 @@ POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-    "email":"emprego1231231@gmail.com",
-    "password":"TesteReal"
+    "email":"sobralcassique@gmail.com",
+    "password":"TesteReal2"
 }
 ### logout 
 POST http://localhost:3000/auth/logout
@@ -41,5 +41,21 @@ POST http://localhost:3000/auth/user
 Content-Type: application/json
 
 {
-    "email":"emprego1231231@gmail.com"
+    "email":"sobralcassique@gmail.com"
+}
+### forgot password
+POST http://localhost:3000/auth/forgot-password
+Content-Type: application/json
+
+{
+    "email":"sobralcassique@gmail.com"
+}
+### reset password
+POST http://localhost:3000/auth/reset-password
+Content-Type: application/json
+
+{
+    "token":"11153",
+    "email":"sobralcassique@gmail.com",
+    "newPassword":"TesteReal2"
 }

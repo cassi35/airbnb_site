@@ -22,7 +22,13 @@ export interface ResendVerificationTokenBody{
         type: verificationType;
     };
 } 
-export interface ResetPasswordBody { Body: { token: string; email: string; newPassword: string } }
+export interface ResetPasswordBody {
+     Body: {
+         token: string;
+          email: string; 
+          newPassword: string 
+        } 
+    }
 export interface UserBodySignup{
     Body: User
 }
