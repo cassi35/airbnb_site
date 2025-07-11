@@ -6,11 +6,11 @@ import { User } from "interface/auth";
 import AuthService from "services /auth_service/auth.service";
 import { StatusResponse } from "interface/responses";
 
-interface UserBody {
+export interface UserBody {
     Body: User
 }
 
-interface ResponseSignup {
+export interface ResponseSignup {
     user?: User,
     token?: string,
     status: string, // Alterado de StatusResponse['status'] para string

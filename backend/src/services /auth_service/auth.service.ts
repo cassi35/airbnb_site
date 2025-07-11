@@ -274,6 +274,211 @@ async logoutUser(reply:FastifyReply):Promise<StatusResponse>{
     return errorResponse
   }
 }
+async forgotPassword(email:string):Promise<StatusResponse>{
+  try {
+    const user = await this.app.mongo.db?.collection<User>('users').findOne({ email: email })
+    if(!user){
+      log.warn(ck.yellow('User not found for forgot password:', email))
+      const errorResponse:StatusResponse = {
+        status: 'error',
+        success: false,
+        message: 'User not found',
+        verified: false
+      }
+      return errorResponse
+    }
+      const cache = new CacheService(this.app, 'auth:')
+     const userExistsInCache = await cache.get<User>(`verify:${email}`)
+    if(userExistsInCache){
+        log.warn(ck.yellow('User already exists in cache:',email))
+        const errorResponse:createUserResponse  =  {
+          status: 'error',
+          success: false,
+          message: 'User already exists in cache',
+          verified: false
+        }
+        return errorResponse
+      }
+      const tokenVerification = generateVerificationToken()
+      // Envio do email
+      const teste = await sendVerificationToken(tokenVerification,email)
+      if(!teste){
+        log.error(ck.red('Failed to send verification email'))
+        const errorResponse:createUserResponse  =  {
+          status: 'error',
+          success: false,
+          message: 'Failed to send verification email',
+          verified: false
+        }
+        return errorResponse
+      }
+      // Salvar no cache
+      await cache.set(`verify:${email}`, {
+        ...user,
+        resetPasswordToken: tokenVerification,
+        resetPasswordExpires: new Date(Date.now() + 3600000) // 1 hora
+      }, 300) // Expira em 5 minutos
+      log.success(ck.green('Verification token sent to:', email))
+      const response:StatusResponse = {
+        user: {
+          ...user,
+          resetPasswordToken: tokenVerification,
+          resetPasswordExpires: new Date(Date.now() + 3600000) // 1 hora
+        },
+        token: tokenVerification,
+        verified: false,
+        status: 'pending',
+        success: true,
+        message: 'Password reset token sent'
+      }
+      return response
+  } catch (error) {
+    log.error(ck.red('Error in forgot password:', error))
+    const errorResponse:StatusResponse = {
+      status: 'error',
+      success: false,
+      message: error instanceof Error ? error.message : 'Failed to process forgot password',
+      verified: false
+    }
+    return errorResponse
+  }
+}
+async resetPassword(token: string, email: string, newPassword: string): Promise<StatusResponse> {
+    try {
+      const cache = new CacheService(this.app, 'auth:')
+      const userData = await cache.get<User>(`verify:${email}`)
+      if (!userData || userData.resetPasswordToken !== token || !userData.resetPasswordExpires || userData.resetPasswordExpires < new Date()) {
+        log.warn(ck.yellow('Invalid or expired reset password token:', token))
+        return {
+          status: 'error',
+          success: false,
+          message: 'Invalid or expired reset password token',
+          verified: false
+        }
+      }
+      const hashedPassword = await this.app.bcrypt.hash(newPassword)
+      const updatedUser: Omit<User, '_id'> = {
+        ...userData,
+        password: hashedPassword,
+        resetPasswordToken: undefined,
+        resetPasswordExpires: undefined,
+        updatedAt: new Date()
+      }
+      const result = await this.app.mongo.db?.collection('users').updateOne({ email }, { $set: updatedUser })
+      if (!result?.acknowledged) {
+        log.error(ck.red('Failed to update user password in database:', email))
+        return {
+          status: 'error',
+          success: false,
+          message: 'Failed to update user password in database',
+          verified: false
+        }
+      }
+      await cache.del(`verify:${email}`)
+      log.success(ck.green('User password reset successfully:', email))
+      return {
+        user: updatedUser,
+        status: 'success',
+        success: true,
+        message: 'Password reset successfully',
+        verified: true
+      }
+    } catch (error) {
+      log.error(ck.red('Error resetting password:', error))
+      return {
+        status: 'error',
+        success: false,
+        message: error instanceof Error ? error.message : 'Failed to reset password',
+        verified: false
+      }
+    }
+  }
+async resendToken(email: string, type: 'verification' | 'reset'): Promise<StatusResponse> {
+  try {
+    const cache = new CacheService(this.app, 'auth:')
+    let userData: User | null = null
+    
+    if (type === 'verification') {
+      // Para verificação de email - busca no cache
+      userData = await cache.get<User>(`verify:${email}`)
+      if (!userData) {
+        return {
+          status: 'error',
+          success: false,
+          message: 'User not found in cache. Please signup again.',
+          verified: false
+        }
+      }
+    } else if (type === 'reset') {
+      // Para reset de senha - busca no banco
+      const userFromDB = await this.app.mongo.db?.collection<User>('users').findOne({ email })
+      if (!userFromDB) {
+        return {
+          status: 'error',
+          success: false,
+          message: 'User not found',
+          verified: false
+        }
+      }
+      userData = userFromDB
+    }
+    
+    if (!userData) {
+      return {
+        status: 'error',
+        success: false,
+        message: 'User data not found',
+        verified: false
+      }
+    }
+    
+    const tokenVerification = generateVerificationToken()
+    const sendEmail = await sendVerificationToken(tokenVerification, email)
+    
+    if (!sendEmail) {
+      return {
+        status: 'error',
+        success: false,
+        message: 'Failed to send verification email',
+        verified: false
+      }
+    }
+    
+    // Preparar dados para o cache baseado no tipo
+    const cacheData = type === 'verification' 
+      ? { ...userData, verificationToken: tokenVerification }
+      : { 
+          ...userData, 
+          resetPasswordToken: tokenVerification,
+          resetPasswordExpires: new Date(Date.now() + 3600000) // 1 hora
+        }
+    
+    await cache.set(`verify:${email}`, cacheData, 300)
+    
+    const message = type === 'verification' 
+      ? 'Verification email resent successfully'
+      : 'Password reset email resent successfully'
+    
+    log.success(ck.green(`${message} to:`, email))
+    
+    return {
+      user: cacheData,
+      token: tokenVerification,
+      verified: false,
+      status: 'pending',
+      success: true,
+      message
+    }
+  } catch (error) {
+    log.error(ck.red('Error resending token:', error))
+    return {
+      status: 'error',
+      success: false,
+      message: error instanceof Error ? error.message : 'Failed to resend token',
+      verified: false
+    }
+  }
+}
 }
 export default AuthService
 //colocar redis aqul

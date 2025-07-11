@@ -5,10 +5,10 @@ import { StatusCodes } from "http-status-codes";
 import { User } from "interface/auth";
 import AuthService from "services /auth_service/auth.service";
 import { StatusResponse } from "interface/responses";
-interface UserBody {
+export interface UserBody {
     Body: User
 }
-interface ResponseVerifyEmail{
+export interface ResponseVerifyEmail{
     user?:User
     token?:string
     status: string; // Alterado de StatusResponse['status'] para string
@@ -17,7 +17,7 @@ interface ResponseVerifyEmail{
     verified: boolean;
     cookie?:string
 }
-export async function verifyEmail(
+export async function verifyEmailController(
     request:FastifyRequest<UserBody>,
     reply:FastifyReply
 ):Promise<void>{

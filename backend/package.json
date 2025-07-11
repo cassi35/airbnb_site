@@ -56,22 +56,22 @@
     "#types": [
       "./build/types/*"
     ],
-    "#utils": [
+    "#utils/*": [
       "./build/utils/*"
     ],
-    "#services": [
+    "#services/*": [
       "./build/services/*"
     ],
-    "#database": [
+    "#database/*": [
       "./build/database/*"
     ],
-    "#controllers": [
+    "#controllers/*": [
       "./build/controllers/*"
     ],
-    "#routes": [
+    "#routes/*": [
       "./build/routes/*"
     ],
-    "#middlewares": [
+    "#middlewares/*": [
       "./build/middlewares/*"
     ]
   }

@@ -5,14 +5,14 @@ import { StatusCodes } from "http-status-codes";
 import { User } from "interface/auth";
 import AuthService from "services /auth_service/auth.service";
 import { StatusResponse } from "interface/responses";
-interface UserBody{
+export interface UserBody{
     Body:{
         email:string,
         password:string,
         role?:string
     }
 }
-interface ResponseLogin{
+export interface ResponseLogin{
     user?:User,
     token?:string,
     status:string,
