@@ -73,6 +73,9 @@
     ],
     "#middlewares/*": [
       "./build/middlewares/*"
+    ],
+    "#interface/*": [
+      "./build/interface/*"
     ]
   }
 }

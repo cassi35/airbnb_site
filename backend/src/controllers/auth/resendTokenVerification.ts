@@ -2,22 +2,9 @@ import log from "console";
 import ck from "chalk";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { StatusCodes } from "http-status-codes";
-import { User } from "interface/auth";
 import AuthService from "services /auth_service/auth.service";
 import { StatusResponse } from "interface/responses";
-type verificationType = 'verification' | 'reset';
-export interface ResendVerificationTokenBody{
-    Body: {
-        email: string;
-        type: verificationType;
-    };
-} 
-export interface ResendVerificationTokenResponse {
-    status: string;
-    success: boolean;
-    message: string;
-    verified: boolean;
-}
+import { ResendVerificationTokenBody, ResendVerificationTokenResponse } from "#interface/interface.auth.response.js";
 export async function resendVerificationTokenController(request:FastifyRequest<ResendVerificationTokenBody>,reply:FastifyReply):Promise<ResendVerificationTokenResponse>{
     try {
         if(!request.server.mongo || !request.server.mongo.db) {

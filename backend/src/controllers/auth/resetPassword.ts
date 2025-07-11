@@ -5,15 +5,8 @@ import { StatusCodes } from "http-status-codes";
 import { User } from "interface/auth";
 import AuthService from "services /auth_service/auth.service";
 import { StatusResponse } from "interface/responses";
-export interface ResetPasswordBody { Body: { token: string; email: string; newPassword: string } }
-export interface ResetPasswordResponse {
-    user?: User;
-    token?: string;
-    status: string;
-    success: boolean;
-    message: string;
-    verified: boolean;  
-}
+import { ResetPasswordBody, ResetPasswordResponse } from "#interface/interface.auth.response.js";
+
 export async function resetPasswordController(
     request: FastifyRequest<ResetPasswordBody>,
     reply: FastifyReply

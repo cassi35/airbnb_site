@@ -479,6 +479,66 @@ async resendToken(email: string, type: 'verification' | 'reset'): Promise<Status
     }
   }
 }
+async getUserByEmail(email: string): Promise<StatusResponse> {
+    try {
+    const user = await this.app.mongo.db?.collection<User>('users').findOne({ email }) 
+    if(!user){
+      log.warn(ck.yellow('User not found by email:', email))
+      return {
+        status: 'error',
+        success: false,
+        message: 'User not found',
+        verified: false
+      }
+
+    } 
+    const response: StatusResponse = {
+      user: user,
+      status: 'success',
+      success: true,
+      message: 'User fetched successfully',
+      verified: user.verified ?? false
+    }
+    return response
+    } catch (error) {
+    log.error(ck.red('Error fetching user by email:', error))
+    return{
+      status: 'error',
+      success: false,
+      message: error instanceof Error ? error.message : 'Failed to fetch user by email',
+      verified: false
+    }
+    }
+  }
+ async serverError():Promise<StatusResponse>{
+  try {
+    const server_mmongo = this.app.mongo
+    if(!server_mmongo || !server_mmongo.db){
+      log.error(ck.red('MongoDB is not available on the server instance'))
+      return {
+        status: 'error',
+        success: false,
+        message: 'Database connection error',
+        verified: false
+      }
+    }
+    const response:StatusResponse = {
+      status: 'success',
+      success: true,
+      message: 'Server is running and MongoDB is connected',
+      verified: false
+    }
+    return response
+  } catch (error) {
+    log.error(ck.red('Error in server error:', error))
+    return {
+      status: 'error',
+      success: false,
+      message: error instanceof Error ? error.message : 'Internal server error',
+      verified: false
+    }
+  }
+ }
 }
 export default AuthService
 //colocar redis aqul

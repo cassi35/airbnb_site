@@ -5,18 +5,8 @@ import { StatusCodes } from "http-status-codes";
 import { User } from "interface/auth";
 import AuthService from "services /auth_service/auth.service";
 import { StatusResponse } from "interface/responses";
-export interface UserBody{
-    Body:{
-        email:string
+import { ForgotPasswordResponse, UserBody } from "#interface/interface.auth.response.js";
 
-    }
-}
-export interface ForgotPasswordResponse {
-    status:string;
-    success:boolean;
-    message:string;
-    verified:boolean;
-}
 export async function forgotPasswordController(  request: FastifyRequest<UserBody>, 
     reply: FastifyReply): Promise<void> {
     try {

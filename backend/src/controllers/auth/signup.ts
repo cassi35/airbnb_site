@@ -5,22 +5,13 @@ import { StatusCodes } from "http-status-codes";
 import { User } from "interface/auth";
 import AuthService from "services /auth_service/auth.service";
 import { StatusResponse } from "interface/responses";
+import { ResponseSignup, UserBodySignup } from "#interface/interface.auth.response.js";
 
-export interface UserBody {
-    Body: User
-}
 
-export interface ResponseSignup {
-    user?: User,
-    token?: string,
-    status: string, // Alterado de StatusResponse['status'] para string
-    success: boolean,
-    message: string,
-    verified: boolean
-}
+
 
 export async function signupController(
-    request: FastifyRequest<UserBody>, 
+    request: FastifyRequest<UserBodySignup>, 
     reply: FastifyReply
 ): Promise<void> {  // Alterado o tipo de retorno
     try {

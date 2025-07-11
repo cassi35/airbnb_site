@@ -5,25 +5,11 @@ import { StatusCodes } from "http-status-codes";
 import { User } from "interface/auth";
 import AuthService from "services /auth_service/auth.service";
 import { StatusResponse } from "interface/responses";
-export interface UserBody{
-    Body:{
-        email:string,
-        password:string,
-        role?:string
-    }
-}
-export interface ResponseLogin{
-    user?:User,
-    token?:string,
-    status:string,
-    success:boolean,
-    verified:boolean,
-    cookie?:string
-}
+import { ResponseLogin, UserBodyLogin } from "#interface/interface.auth.response.js";
 export async function loginController(
-    request:FastifyRequest<UserBody>,
+    request:FastifyRequest<UserBodyLogin>,
     reply:FastifyReply
-):Promise<void>{
+):Promise<ResponseLogin>{
     try {
             if (!request.server.mongo || !request.server.mongo.db) {
             log.error(ck.red('MongoDB não está disponível na instância do servidor'));
