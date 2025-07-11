@@ -173,8 +173,7 @@ class AuthService{
         return errorResponse
       }
       const tokenCookie = generateToken(this.app,result.insertedId.toString())
-      
-      const responseSucess:verifyTokenResponse = {
+     const responseSucess:verifyTokenResponse = {
         user: newUser,
         status: 'success',
         success: true,

@@ -3,7 +3,7 @@ POST http://localhost:3000/auth/signup
 Content-Type: application/json
 
 {
-    "email": "automocaoemail@gmail.com",
+    "email": "emprego1231231@gmail.com",
     "password": "TesteReal",
     "name": "Cassiano5"
 }
@@ -12,6 +12,6 @@ POST http://localhost:3000/auth/verify-email
 Content-Type: application/json
 
 {
-    "email": "automocaoemail@gmail.com",
-    "verificationToken":"23512"
+    "email": "emprego1231231@gmail.com",
+    "verificationToken":"51132"
 }
