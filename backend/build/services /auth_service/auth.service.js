@@ -192,6 +192,288 @@ class AuthService {
             return errorResponse;
         }
     }
+    async loginUser(email, password, role) {
+        try {
+            let exists = await this.app.mongo.db?.collection('users').findOne({ email: email });
+            if (!exists) {
+                consola_1.default.warn(chalk_1.default.yellow('User not found:', email));
+                const errorResponse = {
+                    status: 'error',
+                    success: false,
+                    message: 'User not found',
+                    verified: false
+                };
+                return errorResponse;
+            }
+            let isMatch = await this.app.bcrypt.compare(password, exists.password);
+            if (!isMatch) {
+                consola_1.default.warn(chalk_1.default.yellow('Password does not match for user:', email));
+                const errorResponse = {
+                    status: 'error',
+                    success: false,
+                    message: 'Password does not match',
+                    verified: false
+                };
+                return errorResponse;
+            }
+            if (!exists.verified) {
+                consola_1.default.warn(chalk_1.default.yellow('User is not verified:', email));
+                const errorResponse = {
+                    status: 'error',
+                    success: false,
+                    message: 'User is not verified',
+                    verified: false
+                };
+                return errorResponse;
+            }
+            const token = (0, generateToken_1.generateToken)(this.app, exists._id.toString());
+            const responseSuccess = {
+                user: exists,
+                token: token,
+                status: 'success',
+                success: true,
+                message: 'User logged in successfully',
+                verified: true
+            };
+            return responseSuccess;
+        }
+        catch (error) {
+            consola_1.default.error(chalk_1.default.red('Error logging in user:', error));
+            const errorResponse = {
+                status: 'error',
+                success: false,
+                message: error instanceof Error ? error.message : 'Failed to login user',
+                verified: false
+            };
+            return errorResponse;
+        }
+    }
+    async logoutUser(reply) {
+        try {
+            reply.clearCookie('token', {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'strict'
+            });
+            const response = {
+                status: 'success',
+                success: true,
+                message: 'User logged out successfully',
+                verified: false
+            };
+            return response;
+        }
+        catch (error) {
+            consola_1.default.error(chalk_1.default.red('Error logging out user:', error));
+            const errorResponse = {
+                status: 'error',
+                success: false,
+                message: error instanceof Error ? error.message : 'Failed to logout user',
+                verified: false
+            };
+            return errorResponse;
+        }
+    }
+    async forgotPassword(email) {
+        try {
+            const user = await this.app.mongo.db?.collection('users').findOne({ email: email });
+            if (!user) {
+                consola_1.default.warn(chalk_1.default.yellow('User not found for forgot password:', email));
+                const errorResponse = {
+                    status: 'error',
+                    success: false,
+                    message: 'User not found',
+                    verified: false
+                };
+                return errorResponse;
+            }
+            const cache = new redis_service_1.default(this.app, 'auth:');
+            const userExistsInCache = await cache.get(`verify:${email}`);
+            if (userExistsInCache) {
+                consola_1.default.warn(chalk_1.default.yellow('User already exists in cache:', email));
+                const errorResponse = {
+                    status: 'error',
+                    success: false,
+                    message: 'User already exists in cache',
+                    verified: false
+                };
+                return errorResponse;
+            }
+            const tokenVerification = (0, generateVerificationToken_1.generateVerificationToken)();
+            // Envio do email
+            const teste = await (0, email_1.sendVerificationToken)(tokenVerification, email);
+            if (!teste) {
+                consola_1.default.error(chalk_1.default.red('Failed to send verification email'));
+                const errorResponse = {
+                    status: 'error',
+                    success: false,
+                    message: 'Failed to send verification email',
+                    verified: false
+                };
+                return errorResponse;
+            }
+            // Salvar no cache
+            await cache.set(`verify:${email}`, {
+                ...user,
+                resetPasswordToken: tokenVerification,
+                resetPasswordExpires: new Date(Date.now() + 3600000) // 1 hora
+            }, 300); // Expira em 5 minutos
+            consola_1.default.success(chalk_1.default.green('Verification token sent to:', email));
+            const response = {
+                user: {
+                    ...user,
+                    resetPasswordToken: tokenVerification,
+                    resetPasswordExpires: new Date(Date.now() + 3600000) // 1 hora
+                },
+                token: tokenVerification,
+                verified: false,
+                status: 'pending',
+                success: true,
+                message: 'Password reset token sent'
+            };
+            return response;
+        }
+        catch (error) {
+            consola_1.default.error(chalk_1.default.red('Error in forgot password:', error));
+            const errorResponse = {
+                status: 'error',
+                success: false,
+                message: error instanceof Error ? error.message : 'Failed to process forgot password',
+                verified: false
+            };
+            return errorResponse;
+        }
+    }
+    async resetPassword(token, email, newPassword) {
+        try {
+            const cache = new redis_service_1.default(this.app, 'auth:');
+            const userData = await cache.get(`verify:${email}`);
+            if (!userData || userData.resetPasswordToken !== token || !userData.resetPasswordExpires || userData.resetPasswordExpires < new Date()) {
+                consola_1.default.warn(chalk_1.default.yellow('Invalid or expired reset password token:', token));
+                return {
+                    status: 'error',
+                    success: false,
+                    message: 'Invalid or expired reset password token',
+                    verified: false
+                };
+            }
+            const hashedPassword = await this.app.bcrypt.hash(newPassword);
+            const updatedUser = {
+                ...userData,
+                password: hashedPassword,
+                resetPasswordToken: undefined,
+                resetPasswordExpires: undefined,
+                updatedAt: new Date()
+            };
+            const result = await this.app.mongo.db?.collection('users').updateOne({ email }, { $set: updatedUser });
+            if (!result?.acknowledged) {
+                consola_1.default.error(chalk_1.default.red('Failed to update user password in database:', email));
+                return {
+                    status: 'error',
+                    success: false,
+                    message: 'Failed to update user password in database',
+                    verified: false
+                };
+            }
+            await cache.del(`verify:${email}`);
+            consola_1.default.success(chalk_1.default.green('User password reset successfully:', email));
+            return {
+                user: updatedUser,
+                status: 'success',
+                success: true,
+                message: 'Password reset successfully',
+                verified: true
+            };
+        }
+        catch (error) {
+            consola_1.default.error(chalk_1.default.red('Error resetting password:', error));
+            return {
+                status: 'error',
+                success: false,
+                message: error instanceof Error ? error.message : 'Failed to reset password',
+                verified: false
+            };
+        }
+    }
+    async resendToken(email, type) {
+        try {
+            const cache = new redis_service_1.default(this.app, 'auth:');
+            let userData = null;
+            if (type === 'verification') {
+                // Para verificação de email - busca no cache
+                userData = await cache.get(`verify:${email}`);
+                if (!userData) {
+                    return {
+                        status: 'error',
+                        success: false,
+                        message: 'User not found in cache. Please signup again.',
+                        verified: false
+                    };
+                }
+            }
+            else if (type === 'reset') {
+                // Para reset de senha - busca no banco
+                const userFromDB = await this.app.mongo.db?.collection('users').findOne({ email });
+                if (!userFromDB) {
+                    return {
+                        status: 'error',
+                        success: false,
+                        message: 'User not found',
+                        verified: false
+                    };
+                }
+                userData = userFromDB;
+            }
+            if (!userData) {
+                return {
+                    status: 'error',
+                    success: false,
+                    message: 'User data not found',
+                    verified: false
+                };
+            }
+            const tokenVerification = (0, generateVerificationToken_1.generateVerificationToken)();
+            const sendEmail = await (0, email_1.sendVerificationToken)(tokenVerification, email);
+            if (!sendEmail) {
+                return {
+                    status: 'error',
+                    success: false,
+                    message: 'Failed to send verification email',
+                    verified: false
+                };
+            }
+            // Preparar dados para o cache baseado no tipo
+            const cacheData = type === 'verification'
+                ? { ...userData, verificationToken: tokenVerification }
+                : {
+                    ...userData,
+                    resetPasswordToken: tokenVerification,
+                    resetPasswordExpires: new Date(Date.now() + 3600000) // 1 hora
+                };
+            await cache.set(`verify:${email}`, cacheData, 300);
+            const message = type === 'verification'
+                ? 'Verification email resent successfully'
+                : 'Password reset email resent successfully';
+            consola_1.default.success(chalk_1.default.green(`${message} to:`, email));
+            return {
+                user: cacheData,
+                token: tokenVerification,
+                verified: false,
+                status: 'pending',
+                success: true,
+                message
+            };
+        }
+        catch (error) {
+            consola_1.default.error(chalk_1.default.red('Error resending token:', error));
+            return {
+                status: 'error',
+                success: false,
+                message: error instanceof Error ? error.message : 'Failed to resend token',
+                verified: false
+            };
+        }
+    }
 }
 exports.default = AuthService;
 //colocar redis aqul

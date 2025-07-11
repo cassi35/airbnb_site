@@ -3,12 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.verifyEmail = verifyEmail;
+exports.verifyEmailController = verifyEmailController;
 const console_1 = __importDefault(require("console"));
 const chalk_1 = __importDefault(require("chalk"));
 const http_status_codes_1 = require("http-status-codes");
 const auth_service_1 = __importDefault(require("services /auth_service/auth.service"));
-async function verifyEmail(request, reply) {
+async function verifyEmailController(request, reply) {
     try {
         const userData = request.body;
         if (!userData || !userData.verificationToken || !userData.email) {
