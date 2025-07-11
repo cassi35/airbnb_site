@@ -23,3 +23,5 @@ Content-Type: application/json
     "email":"emprego1231231@gmail.com",
     "password":"TesteReal"
 }
+### logout 
+POST http://localhost:3000/auth/logout

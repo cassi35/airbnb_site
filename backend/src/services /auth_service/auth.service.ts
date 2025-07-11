@@ -1,4 +1,4 @@
-import { FastifyInstance } from "fastify";
+import { FastifyInstance, FastifyReply } from "fastify";
 import { User } from "interface/auth";
 import log from 'consola'
 import ck from 'chalk'
@@ -244,6 +244,31 @@ class AuthService{
       status: 'error',
       success: false,
       message: error instanceof Error ? error.message : 'Failed to login user',
+      verified: false
+    }
+    return errorResponse
+  }
+}
+async logoutUser(reply:FastifyReply):Promise<StatusResponse>{
+  try {
+    reply.clearCookie('token',{
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict'
+    })
+    const response:StatusResponse = {
+      status: 'success',
+      success: true,
+      message: 'User logged out successfully',
+      verified: false
+    }
+    return response
+  } catch (error) {
+    log.error(ck.red('Error logging out user:', error))
+    const errorResponse:StatusResponse = {
+      status: 'error',
+      success: false,
+      message: error instanceof Error ? error.message : 'Failed to logout user',
       verified: false
     }
     return errorResponse
