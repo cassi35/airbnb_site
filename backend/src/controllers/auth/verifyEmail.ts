@@ -1,4 +1,4 @@
-import log from "console";
+    import log from "console";
 import ck from "chalk";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { StatusCodes } from "http-status-codes";

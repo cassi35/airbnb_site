@@ -10,6 +10,7 @@ import { generateToken, setTokenCookie } from "token/generateToken";
 
 type  createUserResponse = StatusResponse
 type verifyTokenResponse = StatusResponse
+type LoginResponse = StatusResponse & { token?: string, user?: User }
 class AuthService{
     private app:FastifyInstance
     private userCollection:any 
@@ -193,8 +194,61 @@ class AuthService{
       return errorResponse
     }
   }
- 
-
+ async loginUser(email:string,password:string,role:string):Promise<LoginResponse>{
+  try {
+    let exists = await this.app.mongo.db?.collection<User>('users').findOne({ email: email })
+    if(!exists){
+      log.warn(ck.yellow('User not found:', email))
+      const errorResponse:LoginResponse = {
+        status: 'error',
+        success: false,
+        message: 'User not found',
+        verified: false
+      }
+      return errorResponse
+    }
+    let isMatch = await this.app.bcrypt.compare(password, exists.password)
+    if(!isMatch){
+      log.warn(ck.yellow('Password does not match for user:', email))
+      const errorResponse:LoginResponse = {
+        status: 'error',
+        success: false,
+        message: 'Password does not match',
+        verified: false
+      }
+      return errorResponse
+    }
+    if(!exists.verified){
+      log.warn(ck.yellow('User is not verified:', email))
+      const errorResponse:LoginResponse = {
+        status: 'error',
+        success: false,
+        message: 'User is not verified',
+        verified: false
+      }
+      return errorResponse
+    }
+    const token = generateToken(this.app, exists._id.toString())
+    const responseSuccess:LoginResponse = {
+      user:exists,
+      token: token,
+      status: 'success',
+      success: true,
+      message: 'User logged in successfully',
+      verified: true
+    }
+    return responseSuccess
+  } catch (error) {
+    log.error(ck.red('Error logging in user:', error))
+    const errorResponse:LoginResponse = {
+      status: 'error',
+      success: false,
+      message: error instanceof Error ? error.message : 'Failed to login user',
+      verified: false
+    }
+    return errorResponse
+  }
+}
 }
 export default AuthService
 //colocar redis aqul

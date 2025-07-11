@@ -15,3 +15,11 @@ Content-Type: application/json
     "email": "emprego1231231@gmail.com",
     "verificationToken":"51132"
 }
+### login
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+    "email":"emprego1231231@gmail.com",
+    "password":"TesteReal"
+}
