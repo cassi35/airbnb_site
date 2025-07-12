@@ -347,6 +347,7 @@ class AuthService {
     async resetPassword(token, email, newPassword) {
         try {
             const cache = new redis_service_1.default(this.app, 'auth:');
+            // Usar o tipo específico do MongoDB
             const userData = await cache.get(`verify:${email}`);
             if (!userData || userData.resetPasswordToken !== token || !userData.resetPasswordExpires || userData.resetPasswordExpires < new Date()) {
                 consola_1.default.warn(chalk_1.default.yellow('Invalid or expired reset password token:', token));
@@ -358,14 +359,17 @@ class AuthService {
                 };
             }
             const hashedPassword = await this.app.bcrypt.hash(newPassword);
-            const updatedUser = {
-                ...userData,
-                password: hashedPassword,
-                resetPasswordToken: undefined,
-                resetPasswordExpires: undefined,
-                updatedAt: new Date()
-            };
-            const result = await this.app.mongo.db?.collection('users').updateOne({ email }, { $set: updatedUser });
+            // Fazer update apenas dos campos necessários
+            const result = await this.app.mongo.db?.collection('users').updateOne({ email }, {
+                $set: {
+                    password: hashedPassword,
+                    updatedAt: new Date()
+                },
+                $unset: {
+                    resetPasswordToken: "",
+                    resetPasswordExpires: ""
+                }
+            });
             if (!result?.acknowledged) {
                 consola_1.default.error(chalk_1.default.red('Failed to update user password in database:', email));
                 return {
@@ -378,7 +382,13 @@ class AuthService {
             await cache.del(`verify:${email}`);
             consola_1.default.success(chalk_1.default.green('User password reset successfully:', email));
             return {
-                user: updatedUser,
+                user: {
+                    ...userData,
+                    password: hashedPassword,
+                    resetPasswordToken: undefined,
+                    resetPasswordExpires: undefined,
+                    updatedAt: new Date()
+                },
                 status: 'success',
                 success: true,
                 message: 'Password reset successfully',
@@ -470,6 +480,67 @@ class AuthService {
                 status: 'error',
                 success: false,
                 message: error instanceof Error ? error.message : 'Failed to resend token',
+                verified: false
+            };
+        }
+    }
+    async getUserByEmail(email) {
+        try {
+            const user = await this.app.mongo.db?.collection('users').findOne({ email });
+            if (!user) {
+                consola_1.default.warn(chalk_1.default.yellow('User not found by email:', email));
+                return {
+                    status: 'error',
+                    success: false,
+                    message: 'User not found',
+                    verified: false
+                };
+            }
+            const response = {
+                user: user,
+                status: 'success',
+                success: true,
+                message: 'User fetched successfully',
+                verified: user.verified ?? false
+            };
+            return response;
+        }
+        catch (error) {
+            consola_1.default.error(chalk_1.default.red('Error fetching user by email:', error));
+            return {
+                status: 'error',
+                success: false,
+                message: error instanceof Error ? error.message : 'Failed to fetch user by email',
+                verified: false
+            };
+        }
+    }
+    async serverError() {
+        try {
+            const server_mmongo = this.app.mongo;
+            if (!server_mmongo || !server_mmongo.db) {
+                consola_1.default.error(chalk_1.default.red('MongoDB is not available on the server instance'));
+                return {
+                    status: 'error',
+                    success: false,
+                    message: 'Database connection error',
+                    verified: false
+                };
+            }
+            const response = {
+                status: 'success',
+                success: true,
+                message: 'Server is running and MongoDB is connected',
+                verified: false
+            };
+            return response;
+        }
+        catch (error) {
+            consola_1.default.error(chalk_1.default.red('Error in server error:', error));
+            return {
+                status: 'error',
+                success: false,
+                message: error instanceof Error ? error.message : 'Internal server error',
                 verified: false
             };
         }

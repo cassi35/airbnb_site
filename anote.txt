@@ -34,6 +34,7 @@ npm i @fastify/cookie
  npm install @fastify/redis ioredis
  npm install @fastify/cookie
  npm i fastify-bcrypt
+ npm install @fastify/oauth2 @google-cloud/local-auth googleapis
 --------------------------------
 
 manda um redis de otp temporario  
