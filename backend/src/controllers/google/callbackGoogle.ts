@@ -4,6 +4,7 @@ import log from 'consola'
 import ck from 'chalk'
 import GoogleAuthService from "services /auth_service/googleAuth.service";
 import { generateJWT } from "token/generateToken";
+import { welcomeEmail } from "emails/email";
 interface GoogleCallbackQuery {
     Querystring: {
         code: string;
@@ -114,6 +115,7 @@ export async function callbackGoogle(request:FastifyRequest<GoogleCallbackQuery>
             sameSite: "strict",
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 dias
         })
+        await welcomeEmail(userResult.user.email)
         //6 redirecionar para o frontend com o token
         return reply.status(StatusCodes.OK).send({
             status: 'success',
