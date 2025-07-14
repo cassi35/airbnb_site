@@ -11,6 +11,7 @@ import { connectDB } from './database'  // Use caminho relativo aqui
 import fastifyCookie from '@fastify/cookie'
 import { connectRedis } from './plugins/redis'  // Use caminho relativo aqui
 import fastifyBcrypt from 'fastify-bcrypt'
+import { cloundinaryConnection } from '#config/cloudinary.js'
 
 const app = fastify({logger:true}).withTypeProvider<ZodTypeProvider>()
 
@@ -37,7 +38,7 @@ async function startServer() {
         // 2. Conectar ao banco ANTES de registrar rotas
         await connectDB(app)
         await connectRedis(app)
-        
+        await cloundinaryConnection()
         // 3. Registrar o swagger
         app.register(connectSwagger)
         

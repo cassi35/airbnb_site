@@ -16,7 +16,10 @@ const envSchema = z.object({
     SENHA_DE_APP:z.string().optional(),
     GOOGLE_CLIENT_ID:z.string().optional(),
     GOOGLE_CLIENT_SECRET:z.string().optional(),
-    GOOGLE_REDIRECT_URI:z.string().url().optional()
+    GOOGLE_REDIRECT_URI:z.string().url().optional(),
+    CLOUNDINARY_NAME:z.string().optional(),
+    CLOUNDINARY_API_KEY:z.string().optional(),
+    CLOUNDINARY_API_SECRET:z.string().optional()
 })
 type envSchema = z.infer<typeof envSchema>
 declare global{

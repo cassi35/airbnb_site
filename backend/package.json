@@ -17,6 +17,7 @@
   "devDependencies": {
     "@types/node": "^24.0.10",
     "@types/nodemailer": "^6.4.17",
+    "@types/socket.io": "^3.0.1",
     "tsx": "^4.20.3",
     "typescript": "^5.8.3"
   },
@@ -31,10 +32,11 @@
     "@fastify/redis": "^7.0.2",
     "@fastify/swagger": "^9.5.1",
     "@fastify/swagger-ui": "^5.2.3",
-    "@fastify/websocket": "^11.1.0",
+    "@fastify/websocket": "^11.2.0",
     "@google-cloud/local-auth": "^3.0.1",
     "axios": "^1.10.0",
     "chalk": "^5.4.1",
+    "cloudinary": "^2.7.0",
     "consola": "^3.4.2",
     "fastify": "^5.4.0",
     "fastify-bcrypt": "^1.0.1",
@@ -49,6 +51,7 @@
     "redis": "^5.6.0",
     "rest": "^2.0.0",
     "socket.io": "^4.8.1",
+    "websocket": "^1.0.35",
     "zod": "^3.25.76"
   },
   "imports": {
