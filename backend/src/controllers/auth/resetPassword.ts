@@ -36,7 +36,7 @@ export async function resetPasswordController(
         }
         
         const response: ResetPasswordResponse = {
-            user: status.user,
+            user: status.user as User,
             token: status.token,
             status: status.status || 'reset',
             success: status.success,

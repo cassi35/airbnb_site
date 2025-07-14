@@ -36,7 +36,7 @@ export async function verifyEmailController(
         }
 
         const response:ResponseVerifyEmail = {
-            user: status.user,
+            user: status.user as User,
             token: status.token,
             status: status.status || 'verified',
             success: status.success,

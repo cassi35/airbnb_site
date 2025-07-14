@@ -33,7 +33,7 @@ export async function signupController(
         
         // Garantindo valores padrão para evitar undefined
         const response: ResponseSignup = {
-            user: status.user,
+            user: status.user as User,
             token: status.token,
             status: status.status || 'pending',
             success: status.success === false ? false : true,

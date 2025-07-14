@@ -11,17 +11,14 @@ export async function loginController(
     reply:FastifyReply
 ):Promise<ResponseLogin>{
     try {
-            if (!request.server.mongo || !request.server.mongo.db) {
-            log.error(ck.red('MongoDB não está disponível na instância do servidor'));
-            return reply.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
-                status: 'error',
-                success: false,
-                message: 'Database connection error',
-                verified: false
-            });
-        }
+           
         const userData = request.body 
         const authService = new AuthService(request.server);
+        const server = (await authService.serverError())
+        if(!server.status){
+            log.error(ck.red('MongoDB não está disponível na instância do servidor'));
+            return reply.status(StatusCodes.INTERNAL_SERVER_ERROR).send(server)
+        }
         const status:StatusResponse = await authService.loginUser(userData.email, userData.password, userData.role || 'user');
         if(!status.success){
             log.warn(ck.yellow('Login failed:', status.message));

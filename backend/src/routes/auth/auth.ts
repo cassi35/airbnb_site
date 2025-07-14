@@ -7,6 +7,8 @@ import { resendVerificationTokenController } from "#controllers/auth/resendToken
 import { resetPasswordController } from "#controllers/auth/resetPassword.js";
 import { signupController } from "#controllers/auth/signup.js";
 import { verifyEmailController } from "#controllers/auth/verifyEmail.js";
+import { callbackGoogle } from "#controllers/google/callbackGoogle.js";
+import { redirectGoogle } from "#controllers/google/redirectGoogle.js";
 import { defineRoutes } from "#utils/utils.js";
 
 export default defineRoutes(app =>{
@@ -17,5 +19,7 @@ export default defineRoutes(app =>{
     app.post('/forgot-password',forgotPasswordController),
     app.post('/reset-password',resetPasswordController),
     app.post('/resend-verification-token',resendVerificationTokenController),
-    app.post('/user',getUserController)
+    app.post('/user',getUserController),
+    app.get('/google',redirectGoogle),
+    app.get('/google/callback',callbackGoogle)
 })

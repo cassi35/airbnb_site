@@ -59,3 +59,9 @@ Content-Type: application/json
     "email":"sobralcassique@gmail.com",
     "newPassword":"TesteReal2"
 }
+
+### signup with google
+GET http://localhost:3000/auth/google
+
+### authenticate google user
+GET http://localhost:3000/auth/google/callback

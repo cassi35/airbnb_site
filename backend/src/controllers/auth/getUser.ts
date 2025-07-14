@@ -32,7 +32,7 @@ export async function getUserController(request:FastifyRequest<GetUserByEmailBod
 
         }
         const response: ResponseGetUserByEmail = {
-            user: status.user,
+            user: status.user as User,
             status: status.status || 'found',
             success: status.success,
             message: status.message || 'User retrieved successfully',

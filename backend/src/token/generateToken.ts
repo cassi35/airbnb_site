@@ -1,5 +1,6 @@
 import { FastifyInstance } from "fastify";
 import { FastifyReply } from "fastify";
+import { ObjectId } from "mongodb";
 
 // Apenas gera o token JWT
 export const generateJWT = (app: FastifyInstance, id: string): string => {
