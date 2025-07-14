@@ -14,6 +14,9 @@ const envSchema = z.object({
     RESEND_API_KEY:z.string().optional(),
     SENDER_EMAIL_FROM_GMAIL:z.string().email().optional(),
     SENHA_DE_APP:z.string().optional(),
+    GOOGLE_CLIENT_ID:z.string().optional(),
+    GOOGLE_CLIENT_SECRET:z.string().optional(),
+    GOOGLE_REDIRECT_URI:z.string().url().optional()
 })
 type envSchema = z.infer<typeof envSchema>
 declare global{
