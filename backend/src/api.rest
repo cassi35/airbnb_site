@@ -41,7 +41,7 @@ POST http://localhost:3000/auth/user
 Content-Type: application/json
 
 {
-    "email":"sobralcassique@gmail.com"
+    "email":"cgrsobral@gmail.com"
 }
 ### forgot password
 POST http://localhost:3000/auth/forgot-password
@@ -65,3 +65,11 @@ GET http://localhost:3000/auth/google
 
 ### authenticate google user
 GET http://localhost:3000/auth/google/callback
+
+### logout with google
+POST http://localhost:3000/auth/logoutGoogle
+Content-Type: application/json
+
+{
+    "email": "cgrsobral@gmail.com"
+}

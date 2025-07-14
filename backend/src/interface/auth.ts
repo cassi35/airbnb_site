@@ -12,6 +12,9 @@ id?: ObjectId;
   verificationToken?: string;
   resetPasswordToken?: string;
   resetPasswordExpires?: Date;
+    access_token?: string; // ✅ ADICIONAR
   createdAt?: Date;
   updatedAt?: Date;
+  googleAccessToken?: string; // ✅ ADICIONAR
+  picture?: string; // ✅ ADICIONAR
 }

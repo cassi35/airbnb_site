@@ -4,7 +4,7 @@ import { GoogleUserData } from "./google";
 type status = 'pending' | 'success' | 'error'
 
 export interface StatusResponse {
-  user?: User | GoogleUserData | null;
+  user?: User | GoogleUserData | null ;
   token?: string;
   status?: status;
   success?: boolean;

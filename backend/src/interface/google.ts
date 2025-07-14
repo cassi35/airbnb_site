@@ -1,7 +1,7 @@
 export interface GoogleUserData {
     id: string;
     token: string;
-    accessToken?: string;
+    access_token?: string;
     email: string;
     verified_email?: boolean;
     name: string;
@@ -12,4 +12,5 @@ export interface GoogleUserData {
     role?: 'user' | 'admin' | 'advertiser';
     createdAt?: Date;
     updatedAt?: Date;
+    provider?: 'google' | 'local' | 'facebook' | 'apple';
 }

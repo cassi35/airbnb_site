@@ -8,6 +8,7 @@ import { resetPasswordController } from "#controllers/auth/resetPassword.js";
 import { signupController } from "#controllers/auth/signup.js";
 import { verifyEmailController } from "#controllers/auth/verifyEmail.js";
 import { callbackGoogle } from "#controllers/google/callbackGoogle.js";
+import { logoutWithGoogle } from "#controllers/google/logoutWithGoogle.js";
 import { redirectGoogle } from "#controllers/google/redirectGoogle.js";
 import { defineRoutes } from "#utils/utils.js";
 
@@ -22,4 +23,5 @@ export default defineRoutes(app =>{
     app.post('/user',getUserController),
     app.get('/google',redirectGoogle),
     app.get('/google/callback',callbackGoogle)
+    app.post('/logoutGoogle',logoutWithGoogle)
 })

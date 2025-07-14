@@ -78,8 +78,13 @@ export async function callbackGoogle(request:FastifyRequest<GoogleCallbackQuery>
                 verified: false
             });
         }
+        const googleUserWithToken = {
+        ...userResult.user,
+        access_token: tokenResponse.access_token
+        }
+
         //3 autenticar / criar usuario no banco de dados 
-        const authResult = await googleService.authenticateGoogleUser(userResult.user);
+        const authResult = await googleService.authenticateGoogleUser(googleUserWithToken);
         if(!authResult.success){
             //   return reply.redirect(`${process.env.FRONTEND_URL}/login?error=auth_failed`);
             log.error(ck.red('Erro ao autenticar usuário do Google:', authResult.message));
