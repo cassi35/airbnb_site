@@ -19,6 +19,9 @@ const envSchema = zod_1.default.object({
     RESEND_API_KEY: zod_1.default.string().optional(),
     SENDER_EMAIL_FROM_GMAIL: zod_1.default.string().email().optional(),
     SENHA_DE_APP: zod_1.default.string().optional(),
+    GOOGLE_CLIENT_ID: zod_1.default.string().optional(),
+    GOOGLE_CLIENT_SECRET: zod_1.default.string().optional(),
+    GOOGLE_REDIRECT_URI: zod_1.default.string().url().optional()
 });
 const parseEnv = envSchema.parse(process.env);
 process.env = Object.create({ ...process.env, ...parseEnv });

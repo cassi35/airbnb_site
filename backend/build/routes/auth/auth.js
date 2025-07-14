@@ -8,6 +8,9 @@ const resendTokenVerification_js_1 = require("#controllers/auth/resendTokenVerif
 const resetPassword_js_1 = require("#controllers/auth/resetPassword.js");
 const signup_js_1 = require("#controllers/auth/signup.js");
 const verifyEmail_js_1 = require("#controllers/auth/verifyEmail.js");
+const callbackGoogle_js_1 = require("#controllers/google/callbackGoogle.js");
+const logoutWithGoogle_js_1 = require("#controllers/google/logoutWithGoogle.js");
+const redirectGoogle_js_1 = require("#controllers/google/redirectGoogle.js");
 const utils_js_1 = require("#utils/utils.js");
 exports.default = (0, utils_js_1.defineRoutes)(app => {
     app.post('/signup', signup_js_1.signupController),
@@ -17,5 +20,8 @@ exports.default = (0, utils_js_1.defineRoutes)(app => {
         app.post('/forgot-password', forgotPassword_js_1.forgotPasswordController),
         app.post('/reset-password', resetPassword_js_1.resetPasswordController),
         app.post('/resend-verification-token', resendTokenVerification_js_1.resendVerificationTokenController),
-        app.post('/user', getUser_js_1.getUserController);
+        app.post('/user', getUser_js_1.getUserController),
+        app.get('/google', redirectGoogle_js_1.redirectGoogle),
+        app.get('/google/callback', callbackGoogle_js_1.callbackGoogle);
+    app.post('/logoutGoogle', logoutWithGoogle_js_1.logoutWithGoogle);
 });
