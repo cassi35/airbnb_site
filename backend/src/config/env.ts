@@ -19,7 +19,11 @@ const envSchema = z.object({
     GOOGLE_REDIRECT_URI:z.string().url().optional(),
     CLOUNDINARY_NAME:z.string().optional(),
     CLOUNDINARY_API_KEY:z.string().optional(),
-    CLOUNDINARY_API_SECRET:z.string().optional()
+    CLOUNDINARY_API_SECRET:z.string().optional(),
+    STRIPE_API_KEY:z.string(),
+    STRIPE_SECRET_KEY:z.string(),
+    BASE_URL:z.string().url().default("http://localhost:3000"),
+    STRIPE_WEBHOOK_SECRET:z.string() 
 })
 type envSchema = z.infer<typeof envSchema>
 declare global{

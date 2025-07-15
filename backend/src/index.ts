@@ -12,6 +12,7 @@ import fastifyCookie from '@fastify/cookie'
 import { connectRedis } from './plugins/redis'  // Use caminho relativo aqui
 import fastifyBcrypt from 'fastify-bcrypt'
 import { cloundinaryConnection } from '#config/cloudinary.js'
+import { stripeConnection } from '#config/stripe.js'
 
 const app = fastify({logger:true}).withTypeProvider<ZodTypeProvider>()
 
@@ -39,6 +40,7 @@ async function startServer() {
         await connectDB(app)
         await connectRedis(app)
         await cloundinaryConnection()
+        await stripeConnection()  // Certifique-se de que a função stripeConnection está importada corretamente
         // 3. Registrar o swagger
         app.register(connectSwagger)
         
