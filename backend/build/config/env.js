@@ -21,7 +21,15 @@ const envSchema = zod_1.default.object({
     SENHA_DE_APP: zod_1.default.string().optional(),
     GOOGLE_CLIENT_ID: zod_1.default.string().optional(),
     GOOGLE_CLIENT_SECRET: zod_1.default.string().optional(),
-    GOOGLE_REDIRECT_URI: zod_1.default.string().url().optional()
+    GOOGLE_REDIRECT_URI: zod_1.default.string().url().optional(),
+    CLOUNDINARY_NAME: zod_1.default.string().optional(),
+    CLOUNDINARY_API_KEY: zod_1.default.string().optional(),
+    CLOUNDINARY_API_SECRET: zod_1.default.string().optional(),
+    STRIPE_API_KEY: zod_1.default.string(),
+    STRIPE_SECRET_KEY: zod_1.default.string(),
+    BASE_URL: zod_1.default.string().url().default("http://localhost:3000"),
+    STRIPE_WEBHOOK_SECRET: zod_1.default.string(),
+    SENTRY_DSN: zod_1.default.string()
 });
 const parseEnv = envSchema.parse(process.env);
 process.env = Object.create({ ...process.env, ...parseEnv });

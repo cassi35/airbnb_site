@@ -15,6 +15,10 @@ const database_1 = require("./database"); // Use caminho relativo aqui
 const cookie_1 = __importDefault(require("@fastify/cookie"));
 const redis_1 = require("./plugins/redis"); // Use caminho relativo aqui
 const fastify_bcrypt_1 = __importDefault(require("fastify-bcrypt"));
+const cloudinary_js_1 = require("#config/cloudinary.js");
+const stripe_js_1 = require("#config/stripe.js");
+const sentry_js_1 = require("#config/sentry.js");
+const hook_1 = require("hooks/hook");
 const app = (0, fastify_1.default)({ logger: true }).withTypeProvider();
 // Função assíncrona para garantir a ordem correta de inicialização
 async function startServer() {
@@ -37,6 +41,9 @@ async function startServer() {
         // 2. Conectar ao banco ANTES de registrar rotas
         await (0, database_1.connectDB)(app);
         await (0, redis_1.connectRedis)(app);
+        await (0, cloudinary_js_1.cloundinaryConnection)();
+        await (0, stripe_js_1.stripeConnection)(); // Certifique-se de que a função stripeConnection está importada corretamente
+        await (0, sentry_js_1.initSentry)(); // Inicializar o Sentry
         // 3. Registrar o swagger
         app.register(swegger_1.connectSwagger);
         // 4. Registrar as rotas DEPOIS da conexão ao banco
@@ -51,6 +58,7 @@ async function startServer() {
             }
             consola_1.default.success(`Route registered: ${chalk_1.default.yellow(method)} ${chalk_1.default.blue(path)}`);
         });
+        app.register(hook_1.hooksFastify);
         // 6. Iniciar o servidor
         const PORT = Number(process.env.PORT) || 3000;
         await app.listen({ port: PORT, host: "" });
