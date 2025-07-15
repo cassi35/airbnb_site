@@ -23,7 +23,8 @@ const envSchema = z.object({
     STRIPE_API_KEY:z.string(),
     STRIPE_SECRET_KEY:z.string(),
     BASE_URL:z.string().url().default("http://localhost:3000"),
-    STRIPE_WEBHOOK_SECRET:z.string() 
+    STRIPE_WEBHOOK_SECRET:z.string(),
+    SENTRY_DSN:z.string() 
 })
 type envSchema = z.infer<typeof envSchema>
 declare global{

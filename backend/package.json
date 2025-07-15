@@ -34,6 +34,8 @@
     "@fastify/swagger-ui": "^5.2.3",
     "@fastify/websocket": "^11.2.0",
     "@google-cloud/local-auth": "^3.0.1",
+    "@sentry/node": "^9.38.0",
+    "@sentry/profiling-node": "^9.38.0",
     "axios": "^1.10.0",
     "chalk": "^5.4.1",
     "cloudinary": "^2.7.0",
@@ -53,6 +55,7 @@
     "socket.io": "^4.8.1",
     "stripe": "^18.3.0",
     "websocket": "^1.0.35",
+    "winston": "^3.17.0",
     "zod": "^3.25.76"
   },
   "imports": {

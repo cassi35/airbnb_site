@@ -13,6 +13,8 @@ import { connectRedis } from './plugins/redis'  // Use caminho relativo aqui
 import fastifyBcrypt from 'fastify-bcrypt'
 import { cloundinaryConnection } from '#config/cloudinary.js'
 import { stripeConnection } from '#config/stripe.js'
+import { initSentry } from '#config/sentry.js'
+import { hooksFastify } from 'hooks/hook'
 
 const app = fastify({logger:true}).withTypeProvider<ZodTypeProvider>()
 
@@ -41,6 +43,7 @@ async function startServer() {
         await connectRedis(app)
         await cloundinaryConnection()
         await stripeConnection()  // Certifique-se de que a função stripeConnection está importada corretamente
+        await initSentry()  // Inicializar o Sentry
         // 3. Registrar o swagger
         app.register(connectSwagger)
         
@@ -57,7 +60,7 @@ async function startServer() {
             }
             log.success(`Route registered: ${ck.yellow(method)} ${ck.blue(path)}`)
         })
-        
+        app.register(hooksFastify)
         // 6. Iniciar o servidor
         const PORT = Number(process.env.PORT) || 3000
         await app.listen({port: PORT, host: ""})
