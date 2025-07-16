@@ -39,7 +39,7 @@ class AuthService{
         createdAt: new Date(),
         updatedAt: new Date(),
         verificationToken: tokenVerification,
-        role:'user', // Default to 'user' if role is not provided
+        role:userData.role,
         provider:'local'
       }
       const cache = new CacheService(this.app, 'auth:')
@@ -175,7 +175,7 @@ class AuthService{
         }
         return errorResponse
       }
-      const tokenCookie = generateToken(this.app,result.insertedId.toString())
+      const tokenCookie = generateToken(this.app,result.insertedId.toString(),user.email)
      const responseSucess:verifyTokenResponse = {
         user: newUser,
         status: 'success',
@@ -230,7 +230,7 @@ class AuthService{
       }
       return errorResponse
     }
-    const token = generateToken(this.app, exists._id.toString())
+    const token = generateToken(this.app, exists._id.toString(),exists.email)
     const responseSuccess:LoginResponse = {
       user:exists,
       token: token,

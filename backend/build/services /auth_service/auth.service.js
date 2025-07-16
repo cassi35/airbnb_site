@@ -35,7 +35,7 @@ class AuthService {
                 createdAt: new Date(),
                 updatedAt: new Date(),
                 verificationToken: tokenVerification,
-                role: 'user', // Default to 'user' if role is not provided
+                role: userData.role,
                 provider: 'local'
             };
             const cache = new redis_service_1.default(this.app, 'auth:');
@@ -170,7 +170,7 @@ class AuthService {
                 };
                 return errorResponse;
             }
-            const tokenCookie = (0, generateToken_1.generateToken)(this.app, result.insertedId.toString());
+            const tokenCookie = (0, generateToken_1.generateToken)(this.app, result.insertedId.toString(), user.email);
             const responseSucess = {
                 user: newUser,
                 status: 'success',
@@ -226,7 +226,7 @@ class AuthService {
                 };
                 return errorResponse;
             }
-            const token = (0, generateToken_1.generateToken)(this.app, exists._id.toString());
+            const token = (0, generateToken_1.generateToken)(this.app, exists._id.toString(), exists.email);
             const responseSuccess = {
                 user: exists,
                 token: token,

@@ -10,6 +10,7 @@ import { verifyEmailController } from "#controllers/auth/verifyEmail.js";
 import { callbackGoogle } from "#controllers/google/callbackGoogle.js";
 import { logoutWithGoogle } from "#controllers/google/logoutWithGoogle.js";
 import { redirectGoogle } from "#controllers/google/redirectGoogle.js";
+import { googleSignupController } from "#controllers/google/signup.js";
 import { defineRoutes } from "#utils/utils.js";
 
 export default defineRoutes(app =>{
@@ -24,4 +25,5 @@ export default defineRoutes(app =>{
     app.get('/google',redirectGoogle),
     app.get('/google/callback',callbackGoogle)
     app.post('/logoutGoogle',logoutWithGoogle)
+    app.post('/google/signup',googleSignupController)
 })

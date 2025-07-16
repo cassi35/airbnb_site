@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.generateToken = exports.setTokenCookie = exports.generateJWT = void 0;
 // Apenas gera o token JWT
-const generateJWT = (app, id) => {
-    return app.jwt.sign({ id }, { expiresIn: "1d" });
+const generateJWT = (app, id, email) => {
+    return app.jwt.sign({ id, email }, { expiresIn: "1d" });
 };
 exports.generateJWT = generateJWT;
 // Configura cookie (usado apenas nas rotas)
@@ -17,7 +17,7 @@ const setTokenCookie = (reply, token) => {
 };
 exports.setTokenCookie = setTokenCookie;
 // Função modificada para não precisar do reply
-const generateToken = (app, id) => {
-    return (0, exports.generateJWT)(app, id);
+const generateToken = (app, id, email) => {
+    return (0, exports.generateJWT)(app, id, email);
 };
 exports.generateToken = generateToken;

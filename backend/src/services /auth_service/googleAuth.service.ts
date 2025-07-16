@@ -29,7 +29,10 @@ class GoogleAuthService {
     }
 
     // Gerar URL de autenticação do Google
-    getGoogleAuthUrl(): string {
+    getGoogleAuthUrl(customData?: any): string {
+          const stateData = customData ? 
+            btoa(JSON.stringify(customData)) : // Codificar dados em base64
+            this.generateState();
         const params = new URLSearchParams({
             client_id: googleConfig.clientId,
             redirect_uri: googleConfig.redirectUri,
@@ -37,7 +40,7 @@ class GoogleAuthService {
             scope: googleConfig.scope.join(' '),
             access_type: 'offline',
             prompt: 'consent',
-            state: this.generateState()
+            state: stateData // ← Passa dados personalizados
         });
         return `${googleConfig.authUrl}?${params.toString()}`;
     }
@@ -161,7 +164,7 @@ class GoogleAuthService {
                 }
 
                 // ✅ GERAR TOKEN JWT
-                const token = generateToken(this.app, existsUser.id || existsUser._id);
+                const token = generateToken(this.app, existsUser.id || existsUser._id,email);
 
                 // ✅ CRIAR OBJETO USER COMPLETO
                 const userResponse: User = {
@@ -215,7 +218,7 @@ class GoogleAuthService {
                 }
 
                 // ✅ GERAR TOKEN JWT
-                const token = generateToken(this.app, googleUser.id);
+                const token = generateToken(this.app, googleUser.id,email);
 
                 log.info("Novo usuário do Google criado com sucesso:", email);
                 return {
@@ -272,6 +275,9 @@ class GoogleAuthService {
                 verified: false
             };
         }
+    }
+    async signupWithGoogle(googleUser:GoogleUserData,customData:any ):Promise<void>{
+        
     }
 }
 

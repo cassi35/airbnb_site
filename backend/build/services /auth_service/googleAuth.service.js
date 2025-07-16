@@ -132,7 +132,7 @@ class GoogleAuthService {
                     };
                 }
                 // ✅ GERAR TOKEN JWT
-                const token = (0, generateToken_1.generateToken)(this.app, existsUser.id || existsUser._id);
+                const token = (0, generateToken_1.generateToken)(this.app, existsUser.id || existsUser._id, email);
                 // ✅ CRIAR OBJETO USER COMPLETO
                 const userResponse = {
                     id: existsUser.id || existsUser._id?.toString(),
@@ -182,7 +182,7 @@ class GoogleAuthService {
                     };
                 }
                 // ✅ GERAR TOKEN JWT
-                const token = (0, generateToken_1.generateToken)(this.app, googleUser.id);
+                const token = (0, generateToken_1.generateToken)(this.app, googleUser.id, email);
                 console_1.default.info("Novo usuário do Google criado com sucesso:", email);
                 return {
                     user: newUser,

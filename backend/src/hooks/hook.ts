@@ -1,41 +1,31 @@
 import { FastifyInstance } from "fastify";
 import { StatusCodes } from "http-status-codes";
 import ck from "chalk";
-import log from "consola";
+import { JWTuser } from "#types/type.js";
 export async function hooksFastify(app:FastifyInstance){
-     // ✅ Hook para autenticação (apenas rotas protegidas)
-    app.addHook("onRequest", async (request, reply) => {
-        // ✅ Definir quais rotas precisam de autenticação
-        const protectedRoutes = [
-            '/api/bookings',
-            '/api/properties/create',
-            '/api/properties/update',
-            '/api/properties/delete',
-            '/api/user/profile',
-            '/api/reviews'
-        ];//adicinando as rotas que precisam de autenticacao
-        
-        // ✅ Verificar se a rota atual precisa de autenticação
-        const isProtected = protectedRoutes.some(route => 
-            request.url.startsWith(route)
-        );
-        
-        // ✅ Só verificar token se for rota protegida
-        if (isProtected) {
-            try {
-                const token = request.headers.authorization?.split(" ")[1];
-                if (!token) {
-                    return reply.status(StatusCodes.UNAUTHORIZED).send({
-                        error: `${ck.red("Token de autenticação não fornecido")}`,
-                    });
-                }
-                const decoded = await app.jwt.verify(token);
-                request.user = decoded;
-            } catch (error) {
-                return reply.status(StatusCodes.BAD_REQUEST).send({
-                    error: `${ck.red("Erro ao verificar autenticação")}`,
-                });
+  app.addHook("onRequest",async (request,reply)=>{
+      console.log('🔍 Hook chamado para:', request.method, request.url);
+    console.log('🔍 Headers authorization:', request.headers.authorization);
+        try {
+            const token = request.headers.authorization?.split(" ")[1];
+            console.log('🔍 Token extraído:', token);
+            if(!token){
+                 console.log('❌ Token não encontrado');
+                return reply.status(StatusCodes.UNAUTHORIZED).send({
+                    error:`${ck.red("Token de autenticação não fornecido")}`,
+                })
             }
+            console.log('✅ Verificando token...');
+            const decoded = await app.jwt.verify(token)
+            console.log('✅ Token decodificado:', decoded);
+            request.jwtUser = decoded as JWTuser
+            console.log('✅ jwtUser atribuído com sucesso');
+        } catch (error) {
+            console.log('❌ Erro ao verificar token:', error);
+            return reply.status(StatusCodes.BAD_REQUEST).send({
+                error:`${ck.red("Erro ao verificar autenticação")}`,
+            })
         }
-    });
+    }) // para verificar o token JWT em cada requisição
+    
 }

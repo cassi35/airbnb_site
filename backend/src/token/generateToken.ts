@@ -3,8 +3,8 @@ import { FastifyReply } from "fastify";
 import { ObjectId } from "mongodb";
 
 // Apenas gera o token JWT
-export const generateJWT = (app: FastifyInstance, id: string): string => {
-    return app.jwt.sign({ id }, { expiresIn: "1d" });
+export const generateJWT = (app: FastifyInstance, id: string,email:string): string => {
+    return app.jwt.sign({ id,email}, { expiresIn: "1d" });
 };
 
 // Configura cookie (usado apenas nas rotas)
@@ -18,6 +18,6 @@ export const setTokenCookie = (reply: FastifyReply, token: string): void => {
 };
 
 // Função modificada para não precisar do reply
-export const generateToken = (app: FastifyInstance, id: string): string => {
-    return generateJWT(app, id);
+export const generateToken = (app: FastifyInstance, id: string,email:string): string => {
+    return generateJWT(app, id,email);
 };

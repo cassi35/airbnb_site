@@ -5,7 +5,20 @@ Content-Type: application/json
 {
     "email": "sobralcassique@gmail.com",
     "password": "TesteReal",
-    "name": "Cassiano5"
+    "name": "Cassiano5",
+    "advertiserData":{
+        "isAdvertiser": true,
+        "companyName": "Cassiano5",
+        "contactEmail":"sobralcassique@gmail.com",
+        "phone":"11999999999",
+        "businessType":"Real Estate",
+        "totalAnnouncements":0,
+        "activeAnnouncements":0,
+        "totalSpent":0,
+        "status":"active",
+        "verificationStatus":"pending"
+    },
+    "role": "advertiser"
 }
 ### verify email
 POST http://localhost:3000/auth/verify-email
@@ -13,7 +26,7 @@ Content-Type: application/json
 
 {
     "email": "sobralcassique@gmail.com",
-    "verificationToken":"14882"
+    "verificationToken":"96537"
 }
 
 ### resend verification token / signup or password
@@ -41,7 +54,7 @@ POST http://localhost:3000/auth/user
 Content-Type: application/json
 
 {
-    "email":"cgrsobral@gmail.com"
+    "email":"sobralcassique@gmail.com"
 }
 ### forgot password
 POST http://localhost:3000/auth/forgot-password
@@ -55,7 +68,7 @@ POST http://localhost:3000/auth/reset-password
 Content-Type: application/json
 
 {
-    "token":"11153",
+    "token":"55864",
     "email":"sobralcassique@gmail.com",
     "newPassword":"TesteReal2"
 }
@@ -71,5 +84,13 @@ POST http://localhost:3000/auth/logoutGoogle
 Content-Type: application/json
 
 {
-    "email": "cgrsobral@gmail.com"
+    "email": "inuteiscoisas6@gmail.com"
+}
+### get profile advertiser
+POST http://localhost:3000/advertiser/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NzY5MjNmY2M1ZjMzNjRiNTdlNjQ3YyIsImVtYWlsIjoic29icmFsY2Fzc2lxdWVAZ21haWwuY29tIiwiaWF0IjoxNzUyNjA0NjU0LCJleHAiOjE3NTI2OTEwNTR9.3Vm5bNYwp3vi3QO3X3hy6OiF6irEklBpko2pPyFovgY
+Content-Type: application/json
+
+{
+    "userId":"6876923fcc5f3364b57e647c"
 }

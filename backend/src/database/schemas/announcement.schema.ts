@@ -4,6 +4,15 @@ export interface Announcement{
     title: string;
     content: string; // Conteúdo do anúncio
     type:'promotion' | 'news' | 'update'; // Tipo de anúncio
+     payment: {
+        plan: 'basic' | 'premium' | 'featured';
+        amount: number; // Valor em centavos
+        currency: 'BRL' | 'USD';
+        stripePaymentIntentId?: string;
+        status: 'pending' | 'paid' | 'failed' | 'refunded';
+        paidAt?: Date;
+        expiresAt: Date; // Data de expiração baseada no plano
+    };
     target:{
         audience: 'all' | 'users' | 'hosts' | 'admins'; // Público-alvo do anúncio
         locations:string[] // Localizações geográficas (se aplicável)
