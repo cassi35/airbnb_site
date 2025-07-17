@@ -276,9 +276,8 @@ class GoogleAuthService {
             };
         }
     }
-    async signupWithGoogle(googleUser:GoogleUserData,customData:any ):Promise<void>{
-        
-    }
+   
+
 }
 
 export default GoogleAuthService;
