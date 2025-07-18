@@ -81,10 +81,9 @@ POST http://localhost:3000/auth/google/complete-signup
 Content-Type: application/json
 
 {
-    "role": "advertiser",
-    "email":"emprego1231231@gmail.com",
+    "role": "user",
+    "email":"sobralcassique@gmail.com",
     "user": {
-        "role": "advertiser",
         "advertiserData": {
             "isAdvertiser": true,
             "companyName": "Cassiano5",
@@ -104,7 +103,7 @@ POST http://localhost:3000/auth/logoutGoogle
 Content-Type: application/json
 
 {
-    "email": "inuteiscoisas6@gmail.com"
+    "email": "emprego1231231@gmail.com"
 }
 ### get profile advertiser
 POST http://localhost:3000/advertiser/profile

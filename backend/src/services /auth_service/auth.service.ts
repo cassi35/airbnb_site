@@ -140,7 +140,7 @@ class AuthService{
         verificationToken: undefined, // Limpar o token de verificação
         updatedAt: new Date()
       }
-     const result = await this.app.mongo.db?.collection('users').insertOne(newUser)
+     const result = await this.app.mongo.db?.collection('user').insertOne(newUser)
       if(!result?.acknowledged && !result?.insertedId){
         log.error(ck.red('Failed to update user in database:', email))
         const errorResponse:verifyTokenResponse = {
@@ -198,7 +198,7 @@ class AuthService{
   }
  async loginUser(email:string,password:string,role:string):Promise<LoginResponse>{
   try {
-    let exists = await this.app.mongo.db?.collection<User>('users').findOne({ email: email })
+    let exists = await this.app.mongo.db?.collection<User>('user').findOne({ email: email })
     if(!exists){
       log.warn(ck.yellow('User not found:', email))
       const errorResponse:LoginResponse = {

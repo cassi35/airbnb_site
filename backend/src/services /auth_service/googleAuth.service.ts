@@ -141,11 +141,11 @@ class GoogleAuthService {
             }
 
             const {id,  email, name, picture } = googleUser;
-            const existsUser = await this.app.mongo.db?.collection<GoogleUser>('users').findOne({ email });
+            const existsUser = await this.app.mongo.db?.collection<GoogleUser>('user').findOne({ email });
 
             if (existsUser) {
                 // Atualizar usuário existente
-                const updateResult = await this.app.mongo.db?.collection('users').updateOne(
+                const updateResult = await this.app.mongo.db?.collection('user').updateOne(
                     { email },
                     { 
                         $set: { 

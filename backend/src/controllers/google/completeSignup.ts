@@ -42,6 +42,7 @@ export async function googleCompleteSignupController(request:FastifyRequest<Goog
            email: userCache.email,
            name: userCache.name,
            picture: userCache.picture,
+           googleAccessToken:userCache.googleAccessToken,
            role: role,
         verified:true,
         createdAt: new Date(),
@@ -52,7 +53,7 @@ export async function googleCompleteSignupController(request:FastifyRequest<Goog
         await cache.clear() //limpa o cache
         switch(role){
             case 'user':
-            await reply.server.mongo.db?.collection('users').insertOne(newUser);
+            await reply.server.mongo.db?.collection('user').insertOne(newUser);
             await welcomeEmail(newUser.email);
             log.info("Usuário cadastrado com sucesso:", newUser.email);
             return reply.status(StatusCodes.CREATED).send({
@@ -63,7 +64,7 @@ export async function googleCompleteSignupController(request:FastifyRequest<Goog
                 cacheUser:userCache
             });
             case 'admin':
-            await reply.server.mongo.db?.collection('admins').insertOne(newUser);
+            await reply.server.mongo.db?.collection('admin').insertOne(newUser);
             await welcomeEmail(newUser.email);
             log.info("Admin cadastrado com sucesso:", newUser.email);
             return reply.status(StatusCodes.CREATED).send({
@@ -74,7 +75,7 @@ export async function googleCompleteSignupController(request:FastifyRequest<Goog
                 cacheUser:userCache
             });
             case 'advertiser':
-            await reply.server.mongo.db?.collection('advertisers').insertOne(newUser);
+            await reply.server.mongo.db?.collection('advertiser').insertOne(newUser);
             await welcomeEmail(newUser.email);
             log.info("Advertiser cadastrado com sucesso:", newUser.email);
             return reply.status(StatusCodes.CREATED).send({
