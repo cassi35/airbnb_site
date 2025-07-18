@@ -1,0 +1,3 @@
+// Controller responsável por remover avaliação (opcional).
+
+// ...implementação futura...

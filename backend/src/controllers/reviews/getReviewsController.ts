@@ -1,0 +1,3 @@
+// Controller responsável por listar avaliações de uma acomodação.
+
+// ...implementação futura...

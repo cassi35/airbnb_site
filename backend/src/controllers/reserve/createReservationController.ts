@@ -1,0 +1,3 @@
+// Controller responsável por criar reserva de acomodação.
+
+// ...implementação futura...

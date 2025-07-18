@@ -1,0 +1,3 @@
+// Controller responsável por listar avaliações feitas por um usuário.
+
+// ...implementação futura...

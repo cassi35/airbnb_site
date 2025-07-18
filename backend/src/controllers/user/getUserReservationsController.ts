@@ -1,0 +1,3 @@
+// Controller responsável por listar reservas do usuário.
+
+// ...implementação futura...

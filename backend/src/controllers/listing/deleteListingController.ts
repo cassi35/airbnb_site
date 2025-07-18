@@ -1,0 +1,1 @@
+//: remove uma acomodação (apenas pelo proprietário).

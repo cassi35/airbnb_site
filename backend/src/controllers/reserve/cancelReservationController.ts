@@ -1,0 +1,3 @@
+// Controller responsável por cancelar reserva.
+
+// ...implementação futura...

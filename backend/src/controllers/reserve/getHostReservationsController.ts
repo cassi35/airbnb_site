@@ -1,0 +1,3 @@
+// Controller responsável por listar reservas recebidas pelo anfitrião.
+
+// ...implementação futura...

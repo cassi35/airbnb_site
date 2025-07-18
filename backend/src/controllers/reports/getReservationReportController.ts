@@ -1,0 +1,1 @@
+// gerar relatório de reservas (por usuário, anunciante ou admin).

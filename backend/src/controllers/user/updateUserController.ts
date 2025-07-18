@@ -1,0 +1,3 @@
+// Controller responsável por editar perfil do usuário.
+
+// ...implementação futura...

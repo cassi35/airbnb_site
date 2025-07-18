@@ -1,0 +1,1 @@
+//atualiza dados de uma acomodação (apenas pelo proprietário).

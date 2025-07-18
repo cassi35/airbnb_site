@@ -1,0 +1,3 @@
+// Controller responsável por buscar detalhes de uma reserva.
+
+// ...implementação futura...

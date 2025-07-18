@@ -1,0 +1,1 @@
+//retorna todas as acomodações criadas por um usuário específico.
