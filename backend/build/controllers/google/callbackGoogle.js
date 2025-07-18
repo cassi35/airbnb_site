@@ -8,7 +8,7 @@ const http_status_codes_1 = require("http-status-codes");
 const consola_1 = __importDefault(require("consola"));
 const chalk_1 = __importDefault(require("chalk"));
 const googleAuth_service_1 = __importDefault(require("services /auth_service/googleAuth.service"));
-const email_1 = require("emails/email");
+const redis_service_1 = __importDefault(require("services /auth_service/redis.service"));
 async function callbackGoogle(request, reply) {
     try {
         const { code, error } = request.query;
@@ -81,6 +81,7 @@ async function callbackGoogle(request, reply) {
         };
         //3 autenticar / criar usuario no banco de dados 
         const authResult = await googleService.authenticateGoogleUser(googleUserWithToken);
+        const redirectStatus = authResult.statusLogin === 'signup' ? 'signup' : 'login';
         if (!authResult.success) {
             //   return reply.redirect(`${process.env.FRONTEND_URL}/login?error=auth_failed`);
             consola_1.default.error(chalk_1.default.red('Erro ao autenticar usuário do Google:', authResult.message));
@@ -109,7 +110,17 @@ async function callbackGoogle(request, reply) {
             sameSite: "strict",
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 dias
         });
-        await (0, email_1.welcomeEmail)(userResult.user.email);
+        const cache = new redis_service_1.default(request.server, 'googleAuth:');
+        const email = authResult.user?.email;
+        if (!email) {
+            return reply.status(http_status_codes_1.StatusCodes.BAD_REQUEST).send({
+                status: 'error',
+                success: false,
+                message: 'Email do usuário Google não encontrado',
+                verified: false
+            });
+        }
+        const userCache = await cache.get(email);
         //6 redirecionar para o frontend com o token
         return reply.status(http_status_codes_1.StatusCodes.OK).send({
             status: 'success',
@@ -117,8 +128,12 @@ async function callbackGoogle(request, reply) {
             message: 'Google user authenticated successfully',
             user: authResult.user,
             token: token,
-            verified: authResult.verified
+            verified: authResult.verified,
+            redirectStatus,
+            userCache: userCache || null
         });
+        //se o redirect status for login vai para o login senao o frontend redireciona 
+        //para as credenciais
     }
     catch (error) {
         consola_1.default.error(chalk_1.default.red('Erro ao processar callback do Google:', error));

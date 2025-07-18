@@ -135,7 +135,7 @@ class AuthService {
                 verificationToken: undefined, // Limpar o token de verificação
                 updatedAt: new Date()
             };
-            const result = await this.app.mongo.db?.collection('users').insertOne(newUser);
+            const result = await this.app.mongo.db?.collection('user').insertOne(newUser);
             if (!result?.acknowledged && !result?.insertedId) {
                 consola_1.default.error(chalk_1.default.red('Failed to update user in database:', email));
                 const errorResponse = {
@@ -194,7 +194,7 @@ class AuthService {
     }
     async loginUser(email, password, role) {
         try {
-            let exists = await this.app.mongo.db?.collection('users').findOne({ email: email });
+            let exists = await this.app.mongo.db?.collection('user').findOne({ email: email });
             if (!exists) {
                 consola_1.default.warn(chalk_1.default.yellow('User not found:', email));
                 const errorResponse = {

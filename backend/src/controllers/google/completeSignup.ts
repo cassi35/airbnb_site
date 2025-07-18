@@ -50,6 +50,7 @@ export async function googleCompleteSignupController(request:FastifyRequest<Goog
         advertiserData:user['advertiserData'] || null,
         hostData:user['hostData'] || null,
         }
+        
         await cache.clear() //limpa o cache
         switch(role){
             case 'user':

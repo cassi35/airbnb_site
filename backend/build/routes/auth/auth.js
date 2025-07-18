@@ -9,6 +9,7 @@ const resetPassword_js_1 = require("#controllers/auth/resetPassword.js");
 const signup_js_1 = require("#controllers/auth/signup.js");
 const verifyEmail_js_1 = require("#controllers/auth/verifyEmail.js");
 const callbackGoogle_js_1 = require("#controllers/google/callbackGoogle.js");
+const completeSignup_js_1 = require("#controllers/google/completeSignup.js");
 const logoutWithGoogle_js_1 = require("#controllers/google/logoutWithGoogle.js");
 const redirectGoogle_js_1 = require("#controllers/google/redirectGoogle.js");
 const utils_js_1 = require("#utils/utils.js");
@@ -23,5 +24,6 @@ exports.default = (0, utils_js_1.defineRoutes)(app => {
         app.post('/user', getUser_js_1.getUserController),
         app.get('/google', redirectGoogle_js_1.redirectGoogle),
         app.get('/google/callback', callbackGoogle_js_1.callbackGoogle);
+    app.post('/google/complete-signup', completeSignup_js_1.googleCompleteSignupController);
     app.post('/logoutGoogle', logoutWithGoogle_js_1.logoutWithGoogle);
 });
