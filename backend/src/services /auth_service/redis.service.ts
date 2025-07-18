@@ -57,12 +57,6 @@ class CacheService{
     await this.set(key, value, ttl);
     return value;
   }
-  async getUserFromCache(email: string): Promise<any> {
-    const user = await this.get(`user:${email}`);
-    if (!user) {
-      throw new Error(`User with email ${email} not found in cache`);
-    }
-    return user;
-  }
+  
 }
 export default CacheService

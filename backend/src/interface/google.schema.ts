@@ -18,7 +18,7 @@ id?: ObjectId;
         hostSince: Date;
         verificationStatus: 'pending' | 'verified' | 'rejected';
         // ... outros dados do host
-    };
+    } | null; // ✅ Pode ser nulo se não for host
      // ✅ Dados do Advertiser (se for anunciante)
     advertiserData?: {
         isAdvertiser: boolean;
@@ -33,5 +33,5 @@ id?: ObjectId;
         verificationStatus: 'pending' | 'verified' | 'rejected';
         createdAt: Date;
         updatedAt: Date;
-    };
+    } | null; // ✅ Pode ser nulo se não for anunciante
 }

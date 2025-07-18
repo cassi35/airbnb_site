@@ -5,6 +5,8 @@ import ck from 'chalk'
 import GoogleAuthService from "services /auth_service/googleAuth.service";
 import { generateJWT } from "token/generateToken";
 import { welcomeEmail } from "emails/email";
+import CacheService from "services /auth_service/redis.service";
+import { GoogleUser } from "#interface/google.schema.js";
 interface GoogleCallbackQuery {
     Querystring: {
         code: string;
@@ -117,7 +119,17 @@ export async function callbackGoogle(request:FastifyRequest<GoogleCallbackQuery>
             sameSite: "strict",
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 dias
         })
-        
+        const cache = new CacheService(request.server,'googleAuth:');
+        const email = authResult.user?.email;
+        if (!email) {
+            return reply.status(StatusCodes.BAD_REQUEST).send({
+                status: 'error',
+                success: false,
+                message: 'Email do usuário Google não encontrado',
+                verified: false
+            });
+        }
+        const userCache = await cache.get<GoogleUser>(email);
         //6 redirecionar para o frontend com o token
         return reply.status(StatusCodes.OK).send({
             status: 'success',
@@ -126,7 +138,8 @@ export async function callbackGoogle(request:FastifyRequest<GoogleCallbackQuery>
             user: authResult.user,
             token: token,
             verified: authResult.verified,
-            redirectStatus
+            redirectStatus,
+            userCache: userCache || null
         })
         //se o redirect status for login vai para o login senao o frontend redireciona 
         //para as credenciais

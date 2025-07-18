@@ -76,9 +76,29 @@ Content-Type: application/json
 ### signup with google
 GET http://localhost:3000/auth/google
 
-### authenticate google user
-GET http://localhost:3000/auth/google/callback
+### complete signup with google
+POST http://localhost:3000/auth/google/complete-signup
+Content-Type: application/json
 
+{
+    "role": "advertiser",
+    "email":"emprego1231231@gmail.com",
+    "user": {
+        "role": "advertiser",
+        "advertiserData": {
+            "isAdvertiser": true,
+            "companyName": "Cassiano5",
+            "contactEmail": "sobralcassique@gmail.com",
+            "phone": "11999999999",
+            "businessType": "Real Estate",
+            "totalAnnouncements": 0,
+            "activeAnnouncements": 0,
+            "totalSpent": 0,
+            "status": "active",
+            "verificationStatus": "pending"
+        }
+}
+}
 ### logout with google
 POST http://localhost:3000/auth/logoutGoogle
 Content-Type: application/json
