@@ -86,6 +86,7 @@ export async function callbackGoogle(request:FastifyRequest<GoogleCallbackQuery>
 
         //3 autenticar / criar usuario no banco de dados 
         const authResult = await googleService.authenticateGoogleUser(googleUserWithToken);
+        const redirectStatus = authResult.statusLogin === 'signup' ? 'signup' : 'login';
         if(!authResult.success){
             //   return reply.redirect(`${process.env.FRONTEND_URL}/login?error=auth_failed`);
             log.error(ck.red('Erro ao autenticar usuário do Google:', authResult.message));
@@ -105,6 +106,7 @@ export async function callbackGoogle(request:FastifyRequest<GoogleCallbackQuery>
                 success: false,
                 message: 'Failed to generate token for Google user',
                 verified: false
+                
             });
         }
       
@@ -115,7 +117,7 @@ export async function callbackGoogle(request:FastifyRequest<GoogleCallbackQuery>
             sameSite: "strict",
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 dias
         })
-        await welcomeEmail(userResult.user.email)
+        
         //6 redirecionar para o frontend com o token
         return reply.status(StatusCodes.OK).send({
             status: 'success',
@@ -123,8 +125,11 @@ export async function callbackGoogle(request:FastifyRequest<GoogleCallbackQuery>
             message: 'Google user authenticated successfully',
             user: authResult.user,
             token: token,
-            verified: authResult.verified
+            verified: authResult.verified,
+            redirectStatus
         })
+        //se o redirect status for login vai para o login senao o frontend redireciona 
+        //para as credenciais
     } catch (error) {
         log.error(ck.red('Erro ao processar callback do Google:', error));
         return reply.status(StatusCodes.INTERNAL_SERVER_ERROR).send({

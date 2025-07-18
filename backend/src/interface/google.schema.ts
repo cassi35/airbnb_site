@@ -3,6 +3,8 @@ export interface GoogleUser{
 id?: ObjectId;
   email: string;
   name: string;
+  picture?: string;
+  googleAccessToken?: string; // ✅ ADICIONAR
   role: 'user' | 'host' | 'admin'| 'advertiser';
   verified: boolean;
   verificationToken?: string;

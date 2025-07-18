@@ -8,6 +8,7 @@ import { User } from "#interface/auth.js";
 import axios from 'axios'
 import log from "console";
 import { generateToken } from "token/generateToken";
+import { GoogleUser } from "#interface/google.schema.js";
 
 type changeForTokenResponse = {
     access_token?: string;
@@ -18,6 +19,7 @@ type getGoogleUserDataResponse = {
     user?: GoogleUserData;
     error?: string;
 }
+export type googleUserOmited = Omit<GoogleUser,'id'> & {id:string}
 
 class GoogleAuthService {
     private app: FastifyInstance;
@@ -138,8 +140,8 @@ class GoogleAuthService {
                 return dbCheck;
             }
 
-            const { email, name, picture, verified_email } = googleUser;
-            const existsUser = await this.app.mongo.db?.collection('users').findOne({ email });
+            const {id,  email, name, picture } = googleUser;
+            const existsUser = await this.app.mongo.db?.collection<GoogleUser>('users').findOne({ email });
 
             if (existsUser) {
                 // Atualizar usuário existente
@@ -152,7 +154,7 @@ class GoogleAuthService {
                         } 
                     }
                 );
-
+            
                 if (!updateResult?.acknowledged) {
                     log.error("Erro ao atualizar usuário do Google:", existsUser);
                     return {
@@ -162,74 +164,55 @@ class GoogleAuthService {
                         verified: false
                     };
                 }
-
-                // ✅ GERAR TOKEN JWT
-                const token = generateToken(this.app, existsUser.id || existsUser._id,email);
-
-                // ✅ CRIAR OBJETO USER COMPLETO
-                const userResponse: User = {
-                    id: existsUser.id || existsUser._id?.toString(),
-                    email: existsUser.email,
-                    name: existsUser.name || name,
-                    password: existsUser.password || '',
-                    provider: 'google',
-                    verified: verified_email || existsUser.verified || false,
-                    role: existsUser.role || 'user',
-                    picture: existsUser.picture || picture,
-                    googleAccessToken: googleUser.access_token,
-                    createdAt: existsUser.createdAt || new Date(),
-                    updatedAt: new Date()
+                    const userId = typeof existsUser.id === 'string'
+                    ? existsUser.id
+                    : existsUser._id
+                    ? existsUser._id.toString()
+                    : '';
+                const token = generateToken(this.app, userId, email);
+                  log.info("Google login realizado com sucesso:", existsUser.email);
+                return {
+                    user: {
+                        ...existsUser,
+                        id: userId, // ✅ ADICIONADO ID
+                    }as googleUserOmited,
+                    token, // ✅ RETORNAR TOKEN
+                    status: 'success',
+                    success: true,
+                    message: 'Usuário autenticado com sucesso',
+                    verified:false ,
+                    statusLogin: 'login'
                 };
-
-                log.info("Google login realizado com sucesso:", existsUser.email);
+            }
+                // ✅ CRIAR OBJETO USER COMPLETO
+                const userResponse: googleUserOmited = {
+                    id: id,
+                    email: email,
+                    name:  name,
+                    verified: true,
+                    role: 'user',
+                    picture: picture,
+                    googleAccessToken: googleUser.access_token,
+                    createdAt: new Date(),
+                    updatedAt: new Date()
+                    };
+                      // ✅ GERAR TOKEN JWT
+                const token = generateToken(this.app, userResponse.id || userResponse.id,email);
+                 //deixa no cache os dados do usuario do google e depois no signup recupera do cache e da um
+                 // post com os signup completo 
+                const cache = new CacheService(this.app, 'googleAuth:');
+                await cache.set(email, userResponse);
+                log.info("Google login realizado com sucesso:", userResponse.email);
                 return {
                     user: userResponse,
                     token, // ✅ RETORNAR TOKEN
                     status: 'success',
                     success: true,
                     message: 'Usuário autenticado com sucesso',
-                    verified: verified_email || false
+                    verified: true,
+                    statusLogin: 'signup'
                 };
-            } else {
-                // ✅ CRIAR NOVO USUÁRIO
-                const newUser: User = {
-                    email,
-                    name,
-                    password: '',
-                    verified: verified_email || false,
-                    role: 'user',
-                    picture,
-                    googleAccessToken: googleUser.access_token, // ✅ CORRIGIDO
-                    provider: 'google',
-                    createdAt: new Date(),
-                    updatedAt: new Date()
-                };
-
-                const result = await this.app.mongo.db?.collection('users').insertOne(newUser);
-                
-                if (!result?.acknowledged) {
-                    log.error("Erro ao criar novo usuário do Google:", newUser);
-                    return {
-                        status: 'error',
-                        success: false,
-                        message: 'Erro ao criar novo usuário do Google',
-                        verified: false
-                    };
-                }
-
-                // ✅ GERAR TOKEN JWT
-                const token = generateToken(this.app, googleUser.id,email);
-
-                log.info("Novo usuário do Google criado com sucesso:", email);
-                return {
-                    user: newUser,
-                    token, // ✅ RETORNAR TOKEN
-                    status: 'success',
-                    success: true,
-                    message: 'Novo usuário do Google criado com sucesso',
-                    verified: verified_email || false
-                };
-            }
+             
         } catch (error) {
             log.error("Erro ao autenticar usuário do Google:", error);
             return {
