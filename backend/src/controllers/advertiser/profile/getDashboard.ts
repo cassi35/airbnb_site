@@ -7,5 +7,5 @@ interface getDashboardResponse {
 }
 //  // Dashboard com métricas dos anúncios
 export async function getDashboardController(request:FastifyRequest,reply:FastifyReply):Promise<void>{
-
+    
 }

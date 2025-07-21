@@ -45,14 +45,13 @@ async function startServer() {
         await stripeConnection()  // Certifique-se de que a função stripeConnection está importada corretamente
         await initSentry()  // Inicializar o Sentry
         // 3. Registrar o swagger
-        app.register(connectSwagger)
         
+        app.register(connectSwagger)
         // 4. Registrar as rotas DEPOIS da conexão ao banco
         app.register(autoload, {
             dir: path.join(__dirname, "routes"),
-            routeParams: true
+            routeParams: true,
         })
-        
         // 5. Registrar hooks
         app.addHook("onRoute", ({method, path}) => {
             if(method == "HEAD" || method == "OPTIONS") {
