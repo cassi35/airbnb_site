@@ -12,7 +12,6 @@ import { googleCompleteSignupController } from "#controllers/google/completeSign
 import { logoutWithGoogle } from "#controllers/google/logoutWithGoogle.js";
 import { redirectGoogle } from "#controllers/google/redirectGoogle.js";
 import { defineRoutes } from "#utils/utils.js";
-
 export default defineRoutes(app =>{
     app.post('/signup',signupController),
     app.post('/verify-email',verifyEmailController),

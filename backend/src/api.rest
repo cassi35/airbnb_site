@@ -3,20 +3,20 @@ POST http://localhost:3000/auth/signup
 Content-Type: application/json
 
 {
-    "email": "sobralcassique@gmail.com",
-    "password": "TesteReal",
+    "email": "cgrsobral@gmail.com",
+    "password": "1234567919",
     "name": "Cassiano5",
-    "advertiserData":{
+    "advertiserData": {
         "isAdvertiser": true,
         "companyName": "Cassiano5",
-        "contactEmail":"sobralcassique@gmail.com",
-        "phone":"11999999999",
-        "businessType":"Real Estate",
-        "totalAnnouncements":0,
-        "activeAnnouncements":0,
-        "totalSpent":0,
-        "status":"active",
-        "verificationStatus":"pending"
+        "contactEmail": "sobralcassique@gmail.com",
+        "phone": "11999999999",
+        "businessType": "company",
+        "totalAnnouncements": 0,
+        "activeAnnouncements": 0,
+        "totalSpent": 0,
+        "status": "active",
+        "verificationStatus": "pending"
     },
     "role": "advertiser"
 }

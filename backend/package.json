@@ -85,6 +85,9 @@
     ],
     "#interface/*": [
       "./build/interface/*"
+    ],
+    "#schemas/*": [
+      "./build/schemas/*"
     ]
   }
 }

@@ -21,7 +21,6 @@ id?: ObjectId;
   // // ✅ Dados do Host (se for host)
     hostData?: {
         isHost: boolean;
-        hostSince: Date;
         verificationStatus: 'pending' | 'verified' | 'rejected';
         // ... outros dados do host
     };

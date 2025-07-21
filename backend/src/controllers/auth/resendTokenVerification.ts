@@ -5,8 +5,20 @@ import { StatusCodes } from "http-status-codes";
 import AuthService from "services /auth_service/auth.service";
 import { StatusResponse } from "interface/responses";
 import { ResendVerificationTokenBody, ResendVerificationTokenResponse } from "#interface/interface.auth.response.js";
+import { resendVerificationTokenSchema } from "#schemas/auth.schema.js";
 export async function resendVerificationTokenController(request:FastifyRequest<ResendVerificationTokenBody>,reply:FastifyReply):Promise<ResendVerificationTokenResponse>{
     try {
+        const data = resendVerificationTokenSchema.safeParse(request.body);
+        if(!data.success) {
+            log.error(ck.red('Erro de validação no resendVerificationToken:', data.error));
+            return reply.status(StatusCodes.BAD_REQUEST).send({
+                status: 'error',
+                success: false,
+                message: data.error.issues.map(issue => issue.message).join(', '),
+                verified: false
+            });
+
+        }
         if(!request.server.mongo || !request.server.mongo.db) {
             log.error(ck.red('MongoDB não está disponível na instância do servidor'));
             return reply.status(StatusCodes.INTERNAL_SERVER_ERROR).send({

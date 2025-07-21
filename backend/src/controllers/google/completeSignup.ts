@@ -3,17 +3,23 @@ import { welcomeEmail } from "emails/email";
 import { FastifyReply, FastifyRequest } from "fastify";
 import CacheService from "services /auth_service/redis.service";
 import log from "console";
+import { GoogleCompleteSignupBody } from "#interface/interface.google.response.js";
+import { googleCompleteSignupSchema } from "#schemas/auth.schema.js";
 const { StatusCodes } = require("http-status-codes");
-interface GoogleCompleteSignupBody {
-    Body:{
-        role:GoogleUser['role'];
-        user?:GoogleUser;
-        email:string
-    }
-}
+
 
 export async function googleCompleteSignupController(request:FastifyRequest<GoogleCompleteSignupBody>,reply:FastifyReply): Promise<void> {
     try {
+        const data = googleCompleteSignupSchema.safeParse(request.body);
+        if (!data.success) {
+            log.error("Erro de validação no googleCompleteSignup:", data.error);
+            return reply.status(StatusCodes.BAD_REQUEST).send({
+                status: 'error',
+                success: false,
+                message: data.error.issues.map(issue => issue.message).join(', '),
+                verified: false
+            });
+        }
         const {role,user,email} = request.body
         if(!user || !role || role != 'user' && role != 'admin' && role != 'advertiser' && role != 'host' || !email){
             return reply.status(StatusCodes.BAD_REQUEST).send({

@@ -6,10 +6,22 @@ import { User } from "interface/auth";
 import AuthService from "services /auth_service/auth.service";
 import { StatusResponse } from "interface/responses";
 import { ForgotPasswordResponse, UserBody } from "#interface/interface.auth.response.js";
+import { forgotPasswordSchema } from "#schemas/auth.schema.js";
 
 export async function forgotPasswordController(  request: FastifyRequest<UserBody>, 
     reply: FastifyReply): Promise<void> {
     try {
+        const data = forgotPasswordSchema.safeParse(request.body);
+        if(!data.success) {
+            log.error(ck.red('Erro de validação no forgotPassword:', data.error));
+            return reply.status(StatusCodes.BAD_REQUEST).send({
+                status: 'error',
+                success: false,
+                message: data.error.issues.map(issue => issue.message).join(', '),
+                verified: false
+            });
+
+        }
         if(!request.server.mongo || !request.server.mongo.db) {
             log.error(ck.red('MongoDB não está disponível na instância do servidor'));
             return reply.status(StatusCodes.INTERNAL_SERVER_ERROR).send({

@@ -6,15 +6,23 @@ import { User } from "interface/auth";
 import AuthService from "services /auth_service/auth.service";
 import { StatusResponse } from "interface/responses";
 import { ResponseSignup, UserBodySignup } from "#interface/interface.auth.response.js";
-
-
-
+import { userSchema } from "#schemas/auth.schema.js";
 
 export async function signupController(
     request: FastifyRequest<UserBodySignup>, 
     reply: FastifyReply
 ): Promise<void> {  // Alterado o tipo de retorno
     try {
+        const data = userSchema.safeParse(request.body);
+        if(!data.success) {
+            log.error(ck.red('Erro de validação no signup:', data.error));
+            return reply.status(StatusCodes.BAD_REQUEST).send({
+                status: 'error',
+                success: false,
+                message: data.error.issues.map(issue => issue.message).join(', '),
+                verified: false
+            });
+        }
         if (!request.server.mongo || !request.server.mongo.db) {
             log.error(ck.red('MongoDB não está disponível na instância do servidor'));
             return reply.status(StatusCodes.INTERNAL_SERVER_ERROR).send({

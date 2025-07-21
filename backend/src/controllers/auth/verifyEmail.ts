@@ -6,6 +6,7 @@ import { User } from "interface/auth";
 import AuthService from "services /auth_service/auth.service";
 import { StatusResponse } from "interface/responses";
 import { ResponseVerifyEmail, UserBodyVerifyEmail } from "#interface/interface.auth.response.js";
+import { verifyEmailSchema } from "#schemas/auth.schema.js";
 
 
 export async function verifyEmailController(
@@ -13,6 +14,16 @@ export async function verifyEmailController(
     reply:FastifyReply
 ):Promise<void>{
     try {
+        const data = verifyEmailSchema.safeParse(request.body);
+        if(!data.success) {
+            log.error(ck.red('Erro de validação no verifyEmail:', data.error));
+            return reply.status(StatusCodes.BAD_REQUEST).send({
+                status: 'error',
+                success: false,
+                message: data.error.issues.map(issue => issue.message).join(', '),
+                verified: false
+            });
+        }
         const userData = request.body 
         if (!userData || !userData.verificationToken || !userData.email) {
             log.warn(ck.yellow('Dados de verificação de email inválidos:', userData));

@@ -6,12 +6,22 @@ import { User } from "interface/auth";
 import AuthService from "services /auth_service/auth.service";
 import { StatusResponse } from "interface/responses";
 import { ResponseLogin, UserBodyLogin } from "#interface/interface.auth.response.js";
+import { loginSchema } from "#schemas/auth.schema.js";
 export async function loginController(
     request:FastifyRequest<UserBodyLogin>,
     reply:FastifyReply
 ):Promise<ResponseLogin>{
     try {
-           
+        const data = loginSchema.safeParse(request.body);
+        if(!data.success){
+            log.error(ck.red('Erro de validação no login:', data.error));
+            return reply.status(StatusCodes.BAD_REQUEST).send({
+                status: 'error',
+                success: false,
+                message: data.error.issues.map(issue => issue.message).join(', '),
+                verified: false
+            });
+        }
         const userData = request.body 
         const authService = new AuthService(request.server);
         const server = (await authService.serverError())

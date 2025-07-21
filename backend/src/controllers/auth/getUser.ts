@@ -5,8 +5,20 @@ import { StatusCodes } from "http-status-codes";
 import { GetUserByEmailBody, ResponseGetUserByEmail } from "#interface/interface.auth.response.js";
 import { User } from "#interface/auth.js";
 import AuthService from "services /auth_service/auth.service";
+import { getUserSchema } from "#schemas/auth.schema.js";
 export async function getUserController(request:FastifyRequest<GetUserByEmailBody>,reply:FastifyReply):Promise<ResponseGetUserByEmail>{
     try {
+        const data = getUserSchema.safeParse(request.body);
+        if(!data.success) {
+            log.error(ck.red('Erro de validação no getUser:', data.error));
+            return reply.status(StatusCodes.BAD_REQUEST).send({
+                user: undefined,
+                status: 'error',
+                success: false,
+                message: data.error.issues.map(issue => issue.message).join(', '),
+                verified: false
+            });
+        }
         const authService = new AuthService(request.server); 
         const mongo = await authService.serverError()
         const email = request.body.email
