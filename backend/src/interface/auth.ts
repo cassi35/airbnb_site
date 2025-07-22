@@ -22,7 +22,14 @@ id?: ObjectId;
     hostData?: {
         isHost: boolean;
         verificationStatus: 'pending' | 'verified' | 'rejected';
-        // ... outros dados do host
+        hostDescription?: string;
+        languages?: string[];
+        responseRate?: number;
+        responseTime?: string;
+        superhost?: boolean;
+        totalListings?: number;
+        reviewsCount?: number;
+        rating?: number;
     };
      // ✅ Dados do Advertiser (se for anunciante)
     advertiserData?: {

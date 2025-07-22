@@ -277,7 +277,7 @@ async logoutUser(reply:FastifyReply):Promise<StatusResponse>{
     return errorResponse
   }
 }
-async forgotPassword(email:string,role:'advertiser'| 'user'| 'admin'):Promise<StatusResponse>{
+async forgotPassword(email:string,role:'advertiser'| 'user'| 'admin'| 'host'):Promise<StatusResponse>{
   try {
     const user = await this.app.mongo.db?.collection<User>(role).findOne({ email: email })
     if(!user){
@@ -346,7 +346,7 @@ async forgotPassword(email:string,role:'advertiser'| 'user'| 'admin'):Promise<St
     return errorResponse
   }
 }
-async resetPassword(token: string, email: string, newPassword: string, role: 'advertiser' | 'user' | 'admin'): Promise<StatusResponse> {
+async resetPassword(token: string, email: string, newPassword: string, role: 'advertiser' | 'user' | 'admin'| 'host'): Promise<StatusResponse> {
     try {
       const cache = new CacheService(this.app, 'auth:')
       
@@ -501,7 +501,7 @@ async resendToken(email: string, type: 'verification' | 'reset'): Promise<Status
     }
   }
 }
-async getUserByEmail(email: string, role: 'advertiser' | 'user' | 'admin'): Promise<StatusResponse> {
+async getUserByEmail(email: string, role: 'advertiser' | 'user' | 'admin' | 'host'): Promise<StatusResponse> {
     try {
     const user = await this.app.mongo.db?.collection<User>(role).findOne({ email }) 
     if(!user){

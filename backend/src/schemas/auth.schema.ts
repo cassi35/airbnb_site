@@ -17,9 +17,16 @@ export const userSchema = z.object({
   googleAccessToken: z.string().optional(),
   picture: z.string().optional(),
   hostData: z.object({
-    isHost: z.boolean(),
-    verificationStatus: z.enum(['pending', 'verified', 'rejected']),
-    // ... outros dados do host, adicione aqui se necessário
+  isHost: z.boolean(),
+  verificationStatus: z.enum(['pending', 'verified', 'rejected']),
+  hostDescription: z.string().max(500).optional(),
+  languages: z.array(z.string()).optional(),
+  responseRate: z.number().min(0).max(100).optional(), // porcentagem
+  responseTime: z.string().optional(), // ex: "within an hour"
+  superhost: z.boolean().optional(),
+  totalListings: z.number().int().min(0).optional(),
+  reviewsCount: z.number().int().min(0).optional(),
+  rating: z.number().min(0).max(5).optional(), // nota média
   }).optional(),
   advertiserData: z.object({
     isAdvertiser: z.boolean(),
@@ -83,10 +90,16 @@ export const googleCompleteSignupSchema = z.object({
   createdAt: z.date(),
   updatedAt: z.date(),
   hostData: z.object({
-    isHost: z.boolean(),
-    hostSince: z.date(),
-    verificationStatus: z.enum(['pending', 'verified', 'rejected']),
-    // ... outros dados do host, adicione aqui se necessário
+   isHost: z.boolean(),
+  verificationStatus: z.enum(['pending', 'verified', 'rejected']),
+  hostDescription: z.string().max(500).optional(),
+  languages: z.array(z.string()).optional(),
+  responseRate: z.number().min(0).max(100).optional(), // porcentagem
+  responseTime: z.string().optional(), // ex: "within an hour"
+  superhost: z.boolean().optional(),
+  totalListings: z.number().int().min(0).optional(),
+  reviewsCount: z.number().int().min(0).optional(),
+  rating: z.number().min(0).max(5).optional(), // nota média
   }).nullable().optional(),
   advertiserData: z.object({
     isAdvertiser: z.boolean(),

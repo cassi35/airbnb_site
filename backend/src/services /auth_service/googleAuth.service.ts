@@ -147,6 +147,14 @@ class GoogleAuthService {
             existsUser = await this.app.mongo.db?.collection<GoogleUser>('advertiser').findOne({ email });
             role = 'advertiser'
             } 
+            if(!existsUser){
+                existsUser = await this.app.mongo.db?.collection<GoogleUser>('admin').findOne({ email });
+                role = 'admin';
+            }
+            if(!existsUser){
+                existsUser = await this.app.mongo.db?.collection<GoogleUser>('host').findOne({ email });
+                role = 'host';
+            }
            if (existsUser) {
                 // Atualizar usuário existente
                 const updateResult = await this.app.mongo.db?.collection(role).updateOne(
