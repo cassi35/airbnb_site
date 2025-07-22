@@ -5,8 +5,7 @@ import CacheService from "services /auth_service/redis.service";
 import log from "console";
 import { GoogleCompleteSignupBody } from "#interface/interface.google.response.js";
 import { googleCompleteSignupSchema } from "#schemas/auth.schema.js";
-const { StatusCodes } = require("http-status-codes");
-
+import { StatusCodes } from "http-status-codes";
 
 export async function googleCompleteSignupController(request:FastifyRequest<GoogleCompleteSignupBody>,reply:FastifyReply): Promise<void> {
     try {
