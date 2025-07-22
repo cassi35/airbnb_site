@@ -34,7 +34,7 @@ export async function forgotPasswordController(  request: FastifyRequest<UserBod
         }
         const userData= request.body 
         const authService = new AuthService(request.server);
-        const status:StatusResponse = await authService.forgotPassword(userData.email);
+        const status:StatusResponse = await authService.forgotPassword(userData.email,userData.role);
         if(!status.success){
             log.warn(ck.yellow('Falha ao solicitar redefinição de senha:', status.message));
             return reply.status(StatusCodes.BAD_REQUEST).send({

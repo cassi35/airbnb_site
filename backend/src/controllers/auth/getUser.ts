@@ -22,6 +22,7 @@ export async function getUserController(request:FastifyRequest<GetUserByEmailBod
         const authService = new AuthService(request.server); 
         const mongo = await authService.serverError()
         const email = request.body.email
+        const role = request.body.role || 'user'; // Default to 'user' if role is not provided
         if(!mongo.success){
             return reply.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
                 user: undefined,
@@ -31,7 +32,7 @@ export async function getUserController(request:FastifyRequest<GetUserByEmailBod
                 verified: false
             })
         }
-        const status = await authService.getUserByEmail(email);
+        const status = await authService.getUserByEmail(email,role);
         if(!status.success){
             log.warn(ck.yellow('Failed to get user by email:', status.message));
             return reply.status(StatusCodes.NOT_FOUND).send({

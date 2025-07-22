@@ -141,11 +141,15 @@ class GoogleAuthService {
             }
 
             const {id,  email, name, picture } = googleUser;
-            const existsUser = await this.app.mongo.db?.collection<GoogleUser>('user').findOne({ email });
-
-            if (existsUser) {
+           let existsUser = await this.app.mongo.db?.collection<GoogleUser>('user').findOne({ email });
+           let role:string = 'user'; 
+           if(!existsUser){
+            existsUser = await this.app.mongo.db?.collection<GoogleUser>('advertiser').findOne({ email });
+            role = 'advertiser'
+            } 
+           if (existsUser) {
                 // Atualizar usuário existente
-                const updateResult = await this.app.mongo.db?.collection('user').updateOne(
+                const updateResult = await this.app.mongo.db?.collection(role).updateOne(
                     { email },
                     { 
                         $set: { 
@@ -179,7 +183,7 @@ class GoogleAuthService {
                     token, // ✅ RETORNAR TOKEN
                     status: 'success',
                     success: true,
-                    message: 'Usuário autenticado com sucesso',
+                    message: 'Usuário autenticado com sucesso'+role,
                     verified:false ,
                     statusLogin: 'login'
                 };

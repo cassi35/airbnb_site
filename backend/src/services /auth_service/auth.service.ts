@@ -140,7 +140,8 @@ class AuthService{
         verificationToken: undefined, // Limpar o token de verificação
         updatedAt: new Date()
       }
-     const result = await this.app.mongo.db?.collection('user').insertOne(newUser)
+    const role = newUser.role || 'user' // Garantir que role tenha um valor padrão
+     const result = await this.app.mongo.db?.collection(role).insertOne(newUser)
       if(!result?.acknowledged && !result?.insertedId){
         log.error(ck.red('Failed to update user in database:', email))
         const errorResponse:verifyTokenResponse = {
@@ -198,7 +199,7 @@ class AuthService{
   }
  async loginUser(email:string,password:string,role:string):Promise<LoginResponse>{
   try {
-    let exists = await this.app.mongo.db?.collection<User>('user').findOne({ email: email })
+    let exists = await this.app.mongo.db?.collection<User>(role).findOne({ email: email })
     if(!exists){
       log.warn(ck.yellow('User not found:', email))
       const errorResponse:LoginResponse = {
@@ -276,9 +277,9 @@ async logoutUser(reply:FastifyReply):Promise<StatusResponse>{
     return errorResponse
   }
 }
-async forgotPassword(email:string):Promise<StatusResponse>{
+async forgotPassword(email:string,role:'advertiser'| 'user'| 'admin'):Promise<StatusResponse>{
   try {
-    const user = await this.app.mongo.db?.collection<User>('users').findOne({ email: email })
+    const user = await this.app.mongo.db?.collection<User>(role).findOne({ email: email })
     if(!user){
       log.warn(ck.yellow('User not found for forgot password:', email))
       const errorResponse:StatusResponse = {
@@ -345,7 +346,7 @@ async forgotPassword(email:string):Promise<StatusResponse>{
     return errorResponse
   }
 }
-async resetPassword(token: string, email: string, newPassword: string): Promise<StatusResponse> {
+async resetPassword(token: string, email: string, newPassword: string, role: 'advertiser' | 'user' | 'admin'): Promise<StatusResponse> {
     try {
       const cache = new CacheService(this.app, 'auth:')
       
@@ -364,7 +365,7 @@ async resetPassword(token: string, email: string, newPassword: string): Promise<
       const hashedPassword = await this.app.bcrypt.hash(newPassword)
       
       // Fazer update apenas dos campos necessários
-      const result = await this.app.mongo.db?.collection('users').updateOne(
+      const result = await this.app.mongo.db?.collection(role).updateOne(
         { email }, 
         { 
           $set: {
@@ -500,9 +501,9 @@ async resendToken(email: string, type: 'verification' | 'reset'): Promise<Status
     }
   }
 }
-async getUserByEmail(email: string): Promise<StatusResponse> {
+async getUserByEmail(email: string, role: 'advertiser' | 'user' | 'admin'): Promise<StatusResponse> {
     try {
-    const user = await this.app.mongo.db?.collection<User>('users').findOne({ email }) 
+    const user = await this.app.mongo.db?.collection<User>(role).findOne({ email }) 
     if(!user){
       log.warn(ck.yellow('User not found by email:', email))
       return {

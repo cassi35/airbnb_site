@@ -134,7 +134,7 @@ export async function callbackGoogle(request:FastifyRequest<GoogleCallbackQuery>
         return reply.status(StatusCodes.OK).send({
             status: 'success',
             success: true,
-            message: 'Google user authenticated successfully',
+            message: authResult.message || 'Google user authenticated successfully',
             user: authResult.user,
             token: token,
             verified: authResult.verified,

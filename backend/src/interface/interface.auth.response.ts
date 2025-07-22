@@ -5,6 +5,7 @@ import { User } from "./auth";
 export interface UserBody{
     Body:{
         email:string
+        role:'advertiser' | 'user' | 'admin'
 
     }
 }
@@ -26,7 +27,8 @@ export interface ResetPasswordBody {
      Body: {
          token: string;
           email: string; 
-          newPassword: string 
+          newPassword: string;
+          role: 'advertiser' | 'user' | 'admin'; // Adicionando o campo role
         } 
     }
 export interface UserBodySignup{
@@ -38,6 +40,7 @@ export interface UserBodyVerifyEmail {
 export interface GetUserByEmailBody{
     Body: {
         email: string;
+        role: 'advertiser' | 'user' | 'admin';
     };
 }
 //importar todas as interfaces de response aqui 

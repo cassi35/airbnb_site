@@ -95,7 +95,46 @@ class Profile {
     }
 
     // ✅ Métodos de Atualização
-    async updateAdvertiserProfile(userId: string, updateData: any): Promise<any> {
+    async updateAdvertiserProfile(userId: string, updateData: object): Promise<{ sucess: boolean; message: string ,profile?: User | GoogleUser | undefined}> {
+       try {
+        const exists = await this.checkIfUserExists(userId);
+        if(!exists){
+            return {
+                sucess: false,
+                message: `${ck.red('Usuário não encontrado')}`
+            }
+        } 
+        const update = await this.app.mongo.db?.collection<User | GoogleUser>('advertiser')
+        .updateOne(
+            { _id: new ObjectId(userId) },
+            { $set: updateData }
+        )
+        if(!update || update.modifiedCount == 0){
+            return {
+                sucess: false,
+                message: `${ck.red('Nenhum dado foi atualizado')}`
+            }
+        }
+        const profile = await this.getAdvertiserProfile(userId);
+        if(!profile.sucess){
+            return {
+                sucess: false,
+                message: profile.message
+            }
+        }
+        return {
+            sucess: true,
+            message: `${ck.green('Perfil de anunciante atualizado com sucesso')}`,
+            profile: profile.profile
+        }
+       } catch (error) {
+            log.error(`${ck.red('Erro ao atualizar perfil do anunciante:')} ${error}`);
+            return {
+                sucess: false,
+                message: `${ck.red('Erro ao atualizar perfil do anunciante')}: ${error}`
+            };
+   
+       }
         // Atualizar perfil do anunciante
     }
 

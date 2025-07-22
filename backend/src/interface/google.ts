@@ -9,7 +9,7 @@ export interface GoogleUserData {
     family_name?: string;
     picture?: string;
     locale?: string;
-    role?: 'user' | 'admin' | 'advertiser';
+    role: 'user' | 'admin' | 'advertiser';
     createdAt?: Date;
     updatedAt?: Date;
     provider?: 'google' | 'local' | 'facebook' | 'apple';

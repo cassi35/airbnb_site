@@ -32,9 +32,9 @@ export async function resetPasswordController(
                 verified: false
             });
         }
-        const { token, email, newPassword } = request.body;
+        const { token, email, newPassword,role } = request.body;
         const authService = new AuthService(request.server);
-        const status: StatusResponse = await authService.resetPassword(token, email, newPassword);
+        const status: StatusResponse = await authService.resetPassword(token, email, newPassword,role);
         
         if (!status.success) {
             log.warn(ck.yellow('Falha ao redefinir a senha:', status.message));

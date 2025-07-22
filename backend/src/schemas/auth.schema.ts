@@ -46,13 +46,15 @@ export const loginSchema = z.object({
 });
 
 export const forgotPasswordSchema = z.object({
-  email: z.string().email("invalid email format")
+  email: z.string().email("invalid email format"),
+  role: z.enum(['advertiser', 'user', 'admin']).optional() // Adicionando o campo role
 });
 
 export const resetPasswordSchema = z.object({
   email: z.string().email("invalid email format"),
   resetPasswordToken: z.string().min(1, "Reset token is required"),
-  newPassword: z.string().min(6, "Password must be at least 6 characters long")
+  newPassword: z.string().min(6, "Password must be at least 6 characters long"),
+  role: z.enum(['advertiser', 'user', 'admin'])
 });
 
 export const resendVerificationTokenSchema = z.object({
@@ -61,7 +63,8 @@ export const resendVerificationTokenSchema = z.object({
 });
 
 export const getUserSchema = z.object({
-  email: z.string().email("invalid email format")
+  email: z.string().email("invalid email format"),
+  role: z.enum(['advertiser', 'user', 'admin']).optional() // Adicionando o campo role
 });
 
 export const googleCompleteSignupSchema = z.object({
