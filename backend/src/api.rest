@@ -3,18 +3,32 @@ POST http://localhost:3000/auth/signup
 Content-Type: application/json
 
 {
-    "email": "inuteiscoisas6@gmail.com",
+    "email": "sobralcassique@gmail.com",
     "password": "1234567919",
     "name": "Cassiano5",
-    "role": "user"
+    "role": "advertiser",
+    "advertiserData": {
+        "isAdvertiser": true,
+        "companyName": "Minha Empresa",
+        "contactEmail": "sobralcassique@gmail.com",
+        "phone": "11999999999",
+        "businessType": "company",
+        "totalAnnouncements": 0,
+        "activeAnnouncements": 0,
+        "totalSpent": 0,
+        "status": "active",
+        "verificationStatus": "pending",
+        "properties": []
+    }
+  
 }
 ### verify email
 POST http://localhost:3000/auth/verify-email
 Content-Type: application/json
 
 {
-    "email": "inuteiscoisas6@gmail.com",
-    "verificationToken":"38492"
+    "email": "sobralcassique@gmail.com",
+    "verificationToken":"89827"
 }
 
 ### resend verification token / signup or password
@@ -32,7 +46,8 @@ Content-Type: application/json
 
 {
     "email":"sobralcassique@gmail.com",
-    "password":"1234567919"
+    "password":"1234567919",
+    "role":"advertiser"
 }
 ### logout 
 POST http://localhost:3000/auth/logout
@@ -95,9 +110,29 @@ Content-Type: application/json
 }
 ### get profile advertiser
 POST http://localhost:3000/advertiser/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4N2ZjMmUxNGMyM2MzOTI0YzEzNDQxYSIsImVtYWlsIjoic29icmFsY2Fzc2lxdWVAZ21haWwuY29tIiwiaWF0IjoxNzUzMjAzNDUxLCJleHAiOjE3NTMyODk4NTF9.diB4UpTc_fxU4xWEqd-CedAsxBhVYWwCHoft0-fPDTQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ODEyYzA0Mjc4MTZkM2UwNzg1YWI2ZSIsImVtYWlsIjoic29icmFsY2Fzc2lxdWVAZ21haWwuY29tIiwiaWF0IjoxNzUzMzA4ODQ2LCJleHAiOjE3NTMzOTUyNDZ9.3Wvjb0Al0SgCxUty0_rWQXb631fu4nYKi5lf2M5-_S0
 Content-Type: application/json
 
 {
-    "userId":"687fc2e14c23c3924c13441a"
+    "userId":"68812c0427816d3e0785ab6e"
+}
+
+### update profile advertiser 
+PATCH  http://localhost:3000/advertiser/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ODEyYzA0Mjc4MTZkM2UwNzg1YWI2ZSIsImVtYWlsIjoic29icmFsY2Fzc2lxdWVAZ21haWwuY29tIiwiaWF0IjoxNzUzMzA4ODQ2LCJleHAiOjE3NTMzOTUyNDZ9.3Wvjb0Al0SgCxUty0_rWQXb631fu4nYKi5lf2M5-_S0
+Content-Type: application/json
+
+{
+    "name":"cassiano2",
+   "advertiserData": {
+        "isAdvertiser": true,
+        "companyName": "airbnb luxos"
+    }
+}
+### create announcement  
+POST http://localhost:3000/advertiser/announcement
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ODEyYzA0Mjc4MTZkM2UwNzg1YWI2ZSIsImVtYWlsIjoic29icmFsY2Fzc2lxdWVAZ21haWwuY29tIiwiaWF0IjoxNzUzMzA4ODQ2LCJleHAiOjE3NTMzOTUyNDZ9.3Wvjb0Al0SgCxUty0_rWQXb631fu4nYKi5lf2M5-_S0
+
+{
+    
 }

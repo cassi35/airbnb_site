@@ -17,9 +17,9 @@ class Profile {
         this.app = app;
     }
     // ✅ Métodos de Verificação
-    private async checkIfUserExists(userId: string): Promise<boolean> {
+    private async checkIfUserExists(userId: string,role:string): Promise<boolean> {
       try {
-            const user = await this.app.mongo.db?.collection('users').findOne({ 
+            const user = await this.app.mongo.db?.collection(role).findOne({ 
                 _id: new ObjectId(userId) 
             });
             return !!user;
@@ -50,17 +50,20 @@ class Profile {
     async getAdvertiserProfile(userId: string): Promise<responseProfile> {
         // Buscar perfil do anunciante
         try {
-            const exists = await this.checkIfUserExists(userId);
+            const exists = await this.checkIfUserExists(userId, 'advertiser');
             if(!exists){
                 return{
                     sucess: false,
                     message: `${ck.red('Usuário não encontrado')}`
                 }
             }
-            const profile = await this.app.mongo.db?.collection<User | GoogleUser>('users').findOne({
+            let profile = await this.app.mongo.db?.collection<User | GoogleUser>('advertiser').findOne({
                 _id:new ObjectId(userId),
                 role: { $in: ['advertiser', 'admin'] }
             })
+            if(!profile){
+                profile = await this.app.mongo.db?.collection<GoogleUser>('user').findOne({ _id: new ObjectId(userId), role: { $in: ['advertiser', 'admin'] } })
+            }
             if(!profile){
                 return {
                     sucess: false,
@@ -93,21 +96,33 @@ class Profile {
     async searchAdvertisers(query: string, filters?: any): Promise<any> {
         // Buscar anunciantes por nome/empresa
     }
-
+    
     // ✅ Métodos de Atualização
     async updateAdvertiserProfile(userId: string, updateData: object): Promise<{ sucess: boolean; message: string ,profile?: User | GoogleUser | undefined}> {
        try {
-        const exists = await this.checkIfUserExists(userId);
+        const exists = await this.checkIfUserExists(userId, 'advertiser');
         if(!exists){
             return {
                 sucess: false,
                 message: `${ck.red('Usuário não encontrado')}`
             }
         } 
+function flattenForDotNotation(obj: any, prefix = ''): any {
+    return Object.keys(obj).reduce((acc, k) => {
+        const pre = prefix.length ? prefix + '.' : '';
+        if (typeof obj[k] === 'object' && obj[k] !== null && !Array.isArray(obj[k])) {
+            Object.assign(acc, flattenForDotNotation(obj[k], pre + k));
+        } else {
+            acc[pre + k] = obj[k];
+        }
+        return acc;
+    }, {} as any);
+}
+        const flattenedData = flattenForDotNotation(updateData);
         const update = await this.app.mongo.db?.collection<User | GoogleUser>('advertiser')
         .updateOne(
             { _id: new ObjectId(userId) },
-            { $set: updateData }
+            { $set: flattenedData }
         )
         if(!update || update.modifiedCount == 0){
             return {

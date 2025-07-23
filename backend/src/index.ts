@@ -41,7 +41,7 @@ async function startServer() {
         // 2. Conectar ao banco ANTES de registrar rotas
         await connectDB(app)
         await connectRedis(app)
-        await cloundinaryConnection()
+        await cloundinaryConnection(app)
         await stripeConnection()  // Certifique-se de que a função stripeConnection está importada corretamente
         await initSentry()  // Inicializar o Sentry
         // 3. Registrar o swagger

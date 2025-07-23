@@ -138,7 +138,8 @@ class AuthService{
         ...user,
         verified: true,
         verificationToken: undefined, // Limpar o token de verificação
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        
       }
     const role = newUser.role || 'user' // Garantir que role tenha um valor padrão
      const result = await this.app.mongo.db?.collection(role).insertOne(newUser)

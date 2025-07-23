@@ -44,14 +44,13 @@ export const UpdateSchema = z.object({
     totalSpent: z.number().optional(),
   }).partial().optional(),
 }) satisfies z.ZodType<UserUpdate>;
-
 // Atualizar perfil (empresa, contato, etc.)
 export async function updateProfileController(request:FastifyRequest,reply:FastifyReply):Promise<void>{
  
     try {
     const data = UpdateSchema.safeParse(request.body);
     if(!data.success){
-        return reply.status(400).send({
+        return reply.status(StatusCodes.BAD_REQUEST).send({
             status: 'error',
             message: 'Invalid data',
             errors: data.error.errors
@@ -60,7 +59,7 @@ export async function updateProfileController(request:FastifyRequest,reply:Fasti
     }
      const userId = request.jwtUser?.id 
     if(!userId){
-        return reply.status(400).send({
+        return reply.status(StatusCodes.BAD_REQUEST).send({
             status: 'error',
             message: 'User ID is required'
         });

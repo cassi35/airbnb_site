@@ -1,4 +1,5 @@
 import { ObjectId, PropertyType } from "mongodb";
+import z from "zod";
 type propertiesType = 'apartment' | 'house' | 'condominium' | 'cottage' | 'farm' | 'chalet' | 'studio' | 'loft';
 type categoriesType = 'beach' | 'mountain' | 'city' | 'countryside' | 'rural' | 'urban';
 type statusTye =  'active' | 'inactive' | 'archived'
@@ -54,3 +55,69 @@ export interface Property{
     createdAt: Date; // Data de criação do anúncio
     updatedAt: Date; // Data da última atualização do anúncio
 }
+export const propertiesTypeEnum = z.enum([
+  "apartment", "house", "condominium", "cottage", "farm", "chalet", "studio", "loft"
+]);
+export const categoriesTypeEnum = z.enum([
+  "beach", "mountain", "city", "countryside", "rural", "urban"
+]);
+export const statusTypeEnum = z.enum([
+  "active", "inactive", "archived"
+]);
+
+export const propertySchema: z.ZodType<Property> = z.object({
+  _id: z.instanceof(ObjectId).optional(),
+  hostId: z.instanceof(ObjectId),
+  title: z.string({ required_error: "O título é obrigatório" })
+    .min(1, { message: "O título é obrigatório" })
+    .max(200, { message: "O título deve ter no máximo 200 caracteres" }),
+  description: z.string({ required_error: "A descrição é obrigatória" })
+    .min(1, { message: "A descrição é obrigatória" })
+    .max(2000, { message: "A descrição deve ter no máximo 2000 caracteres" }),
+  type: propertiesTypeEnum,
+  category: categoriesTypeEnum,
+  location: z.object({
+    address: z.string({ required_error: "Endereço é obrigatório" }).min(1),
+    city: z.string({ required_error: "Cidade é obrigatória" }).min(1),
+    state: z.string({ required_error: "Estado é obrigatório" }).min(1),
+    country: z.string({ required_error: "País é obrigatório" }).min(1),
+    latitude: z.number({ required_error: "Latitude é obrigatória" }),
+    longitude: z.number({ required_error: "Longitude é obrigatória" }),
+  }),
+  details: z.object({
+    bedrooms: z.number({ required_error: "Número de quartos é obrigatório" }).int().min(0),
+    bathrooms: z.number({ required_error: "Número de banheiros é obrigatório" }).int().min(0),
+    beds: z.number({ required_error: "Número de camas é obrigatório" }).int().min(0),
+    guests: z.number({ required_error: "Capacidade de hóspedes é obrigatória" }).int().min(1),
+    amenities: z.array(z.string(), { required_error: "Comodidades são obrigatórias" }),
+  }),
+  pricing: z.object({
+    nightlyRate: z.number({ required_error: "Preço por noite é obrigatório" }).min(0),
+    cleaningFee: z.number({ required_error: "Taxa de limpeza é obrigatória" }).min(0),
+    securityDeposit: z.number({ required_error: "Depósito de segurança é obrigatório" }).min(0),
+    currency: z.string({ required_error: "Moeda é obrigatória" }).min(1).max(10),
+  }),
+  images: z.object({
+    mainImage: z.string({ required_error: "Imagem principal é obrigatória" }).url({ message: "URL da imagem principal inválida" }),
+    gallery: z.array(z.string().url({ message: "URL da galeria inválida" })),
+  }),
+  avaliability: z.object({
+    availableFrom: z.coerce.date({ required_error: "Data de início é obrigatória" }),
+    availableTo: z.coerce.date({ required_error: "Data de término é obrigatória" }),
+    minimumStay: z.number({ required_error: "Estadia mínima é obrigatória" }).int().min(1),
+    maximumStay: z.number({ required_error: "Estadia máxima é obrigatória" }).int().min(1),
+  }),
+  houseRules: z.object({
+    checkIn: z.string({ required_error: "Horário de check-in é obrigatório" }).min(1).max(20),
+    checkOut: z.string({ required_error: "Horário de check-out é obrigatório" }).min(1).max(20),
+    smokingAllowed: z.boolean({ required_error: "Campo fumar permitido é obrigatório" }),
+    petsAllowed: z.boolean({ required_error: "Campo pets permitido é obrigatório" }),
+    partiesAllowed: z.boolean({ required_error: "Campo festas permitido é obrigatório" }),
+  }),
+  status: statusTypeEnum,
+  verified: z.boolean({ required_error: "Campo verificado é obrigatório" }),
+  rating: z.number({ required_error: "Avaliação é obrigatória" }).min(0).max(5),
+  reviewsCount: z.number({ required_error: "Número de avaliações é obrigatório" }).int().min(0),
+  createdAt: z.coerce.date({ required_error: "Data de criação é obrigatória" }),
+  updatedAt: z.coerce.date({ required_error: "Data de atualização é obrigatória" }),
+});

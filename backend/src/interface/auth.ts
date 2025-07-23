@@ -1,3 +1,4 @@
+import { Property } from "#database/schemas/property.schema.js";
 import { ObjectId } from "mongodb";
 type role = 'user' | 'host' | 'admin' | 'advertiser';
 type provider = 'local' | 'google' | 'facebook' | 'apple'
@@ -43,6 +44,7 @@ id?: ObjectId;
         totalSpent: number;
         status: 'active' | 'suspended' | 'inactive';
         verificationStatus: 'pending' | 'verified' | 'rejected';
-    };
+        properties?: ObjectId[];
+      };
     
 }

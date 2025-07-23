@@ -1,4 +1,5 @@
 import { User } from "#interface/auth.js";
+import { ObjectId } from "mongodb";
 import z from "zod";
 export const userSchema = z.object({
   id: z.any().optional(), // ObjectId, pode ser validado com z.string() se for string
@@ -40,6 +41,7 @@ export const userSchema = z.object({
     status: z.enum(['active', 'suspended', 'inactive']),
     verificationStatus: z.enum(['pending', 'verified', 'rejected']),
   }).optional(),
+    properties: z.array(z.instanceof(ObjectId)).default([]).optional()
 }) satisfies z.ZodType<User>;
 
 export const verifyEmailSchema = z.object({
@@ -117,4 +119,5 @@ export const googleCompleteSignupSchema = z.object({
   }).nullable().optional()
 }),
   email: z.string().email("invalid email format"),
+    properties: z.array(z.instanceof(ObjectId)).default([]).optional()
 });

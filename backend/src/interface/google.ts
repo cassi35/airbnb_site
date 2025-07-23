@@ -1,3 +1,6 @@
+import { Property } from "#database/schemas/property.schema.js";
+import { ObjectId } from "mongodb";
+
 export interface GoogleUserData {
     id: string;
     token: string;
@@ -34,5 +37,6 @@ export interface GoogleUserData {
         verificationStatus: 'pending' | 'verified' | 'rejected';
         createdAt: Date;
         updatedAt: Date;
+        properties?: ObjectId[];
     };
 }

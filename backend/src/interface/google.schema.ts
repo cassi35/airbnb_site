@@ -1,3 +1,4 @@
+import { Property } from "#database/schemas/property.schema.js";
 import { ObjectId } from "mongodb";
 export interface GoogleUser{
 id?: ObjectId;
@@ -40,5 +41,6 @@ id?: ObjectId;
         verificationStatus: 'pending' | 'verified' | 'rejected';
         createdAt: Date;
         updatedAt: Date;
+        properties?:ObjectId[]
     } | null; // ✅ Pode ser nulo se não for anunciante
 }

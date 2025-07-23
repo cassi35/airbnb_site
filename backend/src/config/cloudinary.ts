@@ -1,13 +1,16 @@
 import { v2 as cloudinary } from 'cloudinary';
 import log from 'consola';
 import ck from 'chalk';
-cloudinary.config({
-    cloud_name:process.env.CLOUNDINARY_NAME,
-    api_key:process.env.CLOUNDINARY_API_KEY,
-    api_secret:process.env.CLOUNDINARY_API_SECRET
-})
-export async function cloundinaryConnection():Promise<void>{
+import { FastifyInstance } from 'fastify';
+
+export async function cloundinaryConnection(app:FastifyInstance):Promise<void>{
     try {
+        cloudinary.config({
+        cloud_name:process.env.CLOUNDINARY_NAME,
+        api_key:process.env.CLOUNDINARY_API_KEY,
+        api_secret:process.env.CLOUNDINARY_API_SECRET
+        })
+        await app.decorate('cloudinary', cloudinary);
         log.info(`Tentando conectar ao Cloudinary: ${process.env.CLOUNDINARY_NAME}...`);
         const result = await cloudinary.api.ping()
         switch(result.status){
