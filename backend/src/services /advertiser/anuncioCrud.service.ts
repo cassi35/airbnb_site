@@ -279,5 +279,27 @@ class Announcement{
             }
         }
     }
+    async getAllAnnouncements():Promise<GetAnnouncementsResponse>{
+        try {
+            const server = this.connectDB()
+            if(!server){
+                return {
+                    success: false,
+                    message: "Database connection error"
+                }
+            }
+            const announcements = await this.app.mongo.db?.collection<Property>('announcements').find().toArray()
+            return {
+                success: true,
+                message: "Announcements retrieved successfully",
+                announcements
+            }
+        } catch (error) {
+            return {
+                success: false,
+                message: `Error retrieving announcements: ${error}`
+            }
+        }
+    }
 }
 export default Announcement;
