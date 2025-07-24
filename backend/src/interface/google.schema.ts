@@ -41,6 +41,6 @@ id?: ObjectId;
         verificationStatus: 'pending' | 'verified' | 'rejected';
         createdAt: Date;
         updatedAt: Date;
-        properties?:ObjectId[]
+        properties?:ObjectId[] 
     } | null; // ✅ Pode ser nulo se não for anunciante
 }

@@ -15,8 +15,7 @@ export interface Property{
         city: string; // Cidade
         state: string; // Estado
         country: string; // País
-        latitude: number; // Latitude
-        longitude: number; // Longitude
+     
     }
     details:{
         bedrooms: number; // Número de quartos
@@ -81,8 +80,6 @@ export const propertySchema: z.ZodType<Property> = z.object({
     city: z.string({ required_error: "Cidade é obrigatória" }).min(1),
     state: z.string({ required_error: "Estado é obrigatório" }).min(1),
     country: z.string({ required_error: "País é obrigatório" }).min(1),
-    latitude: z.number({ required_error: "Latitude é obrigatória" }),
-    longitude: z.number({ required_error: "Longitude é obrigatória" }),
   }),
   details: z.object({
     bedrooms: z.number({ required_error: "Número de quartos é obrigatório" }).int().min(0),

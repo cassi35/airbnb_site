@@ -56,7 +56,8 @@
     "stripe": "^18.3.0",
     "websocket": "^1.0.35",
     "winston": "^3.17.0",
-    "zod": "^3.25.76"
+    "zod": "^3.25.76",
+    "zod-to-json-schema": "^3.24.6"
   },
   "imports": {
     "#config/*": [

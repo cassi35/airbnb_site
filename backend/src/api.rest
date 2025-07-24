@@ -130,9 +130,62 @@ Content-Type: application/json
     }
 }
 ### create announcement  
-POST http://localhost:3000/advertiser/announcement
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ODEyYzA0Mjc4MTZkM2UwNzg1YWI2ZSIsImVtYWlsIjoic29icmFsY2Fzc2lxdWVAZ21haWwuY29tIiwiaWF0IjoxNzUzMzA4ODQ2LCJleHAiOjE3NTMzOTUyNDZ9.3Wvjb0Al0SgCxUty0_rWQXb631fu4nYKi5lf2M5-_S0
+POST http://localhost:3000/announcement/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ODEyYzA0Mjc4MTZkM2UwNzg1YWI2ZSIsImVtYWlsIjoic29icmFsY2Fzc2lxdWVAZ21haWwuY29tIiwiaWF0IjoxNzUzMzU4MDgxLCJleHAiOjE3NTM0NDQ0ODF9.E9_EbxpGO5EcK6ovYQHMpLMGSvVKGoYp60l_eDrkabc
+Content-Type: application/json
 
 {
-    
+  "hostId": "68812c0427816d3e0785ab6e",
+  "title": "Apartamento Luxuoso na Praia",
+  "description": "Apartamento com vista para o mar, totalmente mobiliado.",
+  "type": "apartment",
+  "category": "beach",
+  "location": {
+    "address": "Av. Atlântica, 123",
+    "city": "Rio de Janeiro",
+    "state": "RJ",
+    "country": "Brasil"
+  },
+  "details": {
+    "bedrooms": 2,
+    "bathrooms": 2,
+    "beds": 3,
+    "guests": 4,
+    "amenities": ["Wi-Fi", "Ar-condicionado", "Piscina"]
+  },
+  "pricing": {
+    "nightlyRate": 350,
+    "cleaningFee": 50,
+    "securityDeposit": 500,
+    "currency": "BRL"
+  },
+  "images": {
+    "mainImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiT3zbmAhh0ZvF6np0VdazKqXREzSvTjXmSw&s",
+    "gallery": [
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiT3zbmAhh0ZvF6np0VdazKqXREzSvTjXmSw&s",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdeOWXluMvbzQLcuPhjVn_DGFVJOcZ4RoK7Q&s"
+    ]
+  },
+  "avaliability": {
+    "availableFrom": "2025-08-01T00:00:00.000Z",
+    "availableTo": "2025-12-31T00:00:00.000Z",
+    "minimumStay": 2,
+    "maximumStay": 30
+  },
+  "houseRules": {
+    "checkIn": "14:00",
+    "checkOut": "12:00",
+    "smokingAllowed": false,
+    "petsAllowed": true,
+    "partiesAllowed": false
+  },
+  "status": "active",
+  "verified": true,
+  "rating": 4.8,
+  "reviewsCount": 12,
+  "createdAt": "2025-07-24T00:00:00.000Z",
+  "updatedAt": "2025-07-24T00:00:00.000Z"
 }
+### delete announcement 
+DELETE http://localhost:3000/announcement/68822a1d2c1fa462e94b9760
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ODEyYzA0Mjc4MTZkM2UwNzg1YWI2ZSIsImVtYWlsIjoic29icmFsY2Fzc2lxdWVAZ21haWwuY29tIiwiaWF0IjoxNzUzMzY4MzY2LCJleHAiOjE3NTM0NTQ3NjZ9.CqPdYeFkGMxyPodQ24OPqfY0oteQmumCjTXOaAUMmOk

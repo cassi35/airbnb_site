@@ -12,7 +12,8 @@ interface CreateAnnouncementResponse {
 }
 export async function createAnnouncementController(request:FastifyRequest,reply:FastifyReply):Promise<void | CreateAnnouncementResponse>{
     try {
-       const data = propertySchema.safeParse(request.body);
+       const body = { ...(request.body as Record<string, any>), hostId: new ObjectId((request.body as any).hostId) };
+       const data = propertySchema.safeParse(body);
        if(!data.success){
             return reply.status(StatusCodes.BAD_REQUEST).send({
                 success: false,
@@ -44,7 +45,7 @@ export async function createAnnouncementController(request:FastifyRequest,reply:
        if(!postGetAnnouncement.success){
            return reply.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
                success: false,
-               message: 'Error fetching announcements after creation'
+               message: postGetAnnouncement.message
            });
        }
        return reply.status(StatusCodes.CREATED).send({
