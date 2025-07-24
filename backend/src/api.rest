@@ -130,7 +130,7 @@ Content-Type: application/json
     }
 }
 ### create announcement  
-POST http://localhost:3000/announcement/
+POST http://localhost:3000/announcement/create
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ODEyYzA0Mjc4MTZkM2UwNzg1YWI2ZSIsImVtYWlsIjoic29icmFsY2Fzc2lxdWVAZ21haWwuY29tIiwiaWF0IjoxNzUzMzU4MDgxLCJleHAiOjE3NTM0NDQ0ODF9.E9_EbxpGO5EcK6ovYQHMpLMGSvVKGoYp60l_eDrkabc
 Content-Type: application/json
 
@@ -193,3 +193,23 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ODEyYzA0M
 ### get all announcements 
 GET http://localhost:3000/announcement/all
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ODEyYzA0Mjc4MTZkM2UwNzg1YWI2ZSIsImVtYWlsIjoic29icmFsY2Fzc2lxdWVAZ21haWwuY29tIiwiaWF0IjoxNzUzMzY4MzY2LCJleHAiOjE3NTM0NTQ3NjZ9.CqPdYeFkGMxyPodQ24OPqfY0oteQmumCjTXOaAUMmOk
+
+### get active announcements
+GET http://localhost:3000/announcement/active
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ODEyYzA0Mjc4MTZkM2UwNzg1YWI2ZSIsImVtYWlsIjoic29icmFsY2Fzc2lxdWVAZ21haWwuY29tIiwiaWF0IjoxNzUzMzY4MzY2LCJleHAiOjE3NTM0NTQ3NjZ9.CqPdYeFkGMxyPodQ24OPqfY0oteQmumCjTXOaAUMmOk
+
+### get advertiser announcements 
+GET http://localhost:3000/announcement/68812c0427816d3e0785ab6e
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ODEyYzA0Mjc4MTZkM2UwNzg1YWI2ZSIsImVtYWlsIjoic29icmFsY2Fzc2lxdWVAZ21haWwuY29tIiwiaWF0IjoxNzUzMzY4MzY2LCJleHAiOjE3NTM0NTQ3NjZ9.CqPdYeFkGMxyPodQ24OPqfY0oteQmumCjTXOaAUMmOk
+
+### update announcement
+PATCH http://localhost:3000/announcement/6882201bccb65f1dbf77478b
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ODEyYzA0Mjc4MTZkM2UwNzg1YWI2ZSIsImVtYWlsIjoic29icmFsY2Fzc2lxdWVAZ21haWwuY29tIiwiaWF0IjoxNzUzMzY4MzY2LCJleHAiOjE3NTM0NTQ3NjZ9.CqPdYeFkGMxyPodQ24OPqfY0oteQmumCjTXOaAUMmOk
+Content-Type: application/json
+
+{
+   "advertiserData": {
+        "isAdvertiser": false,
+        "companyName": "update announcement"
+    }
+}

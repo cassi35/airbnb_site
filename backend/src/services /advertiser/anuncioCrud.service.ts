@@ -325,7 +325,7 @@ class Announcement{
                     message:"error to connect to database"
                 }
             }
-            let all = await this.app.mongo.db?.collection<Property>('announcements').find({ active: true }).toArray();
+            let all = await this.app.mongo.db?.collection<Property>('announcements').find({ status: "active" }).toArray();
             if(!all || all.length === 0){
                 return {
                     success: false,
@@ -400,8 +400,7 @@ class Announcement{
                 if(!updateResult || updateResult.modifiedCount === 0){
                     return {
                         success: false,
-                        message: "Announcement not found or no changes made",
-                        announcement: undefined
+                        message: "Announcement not found or no changes made" + updateResult + flattendData
                     }
                 }
                 const announcement = await this.app.mongo.db?.collection<Property>('announcements').findOne({_id: id});
