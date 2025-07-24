@@ -212,4 +212,11 @@ Content-Type: application/json
         "isAdvertiser": false,
         "companyName": "update announcement"
     }
-}
+} 
+// mudar o jeito de fazer ser
+// obrigatorio todos os campos 
+
+### get metrics of announcement 
+GET http://localhost:3000/announcement/metrics/68812c0427816d3e0785ab6e
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ODEyYzA0Mjc4MTZkM2UwNzg1YWI2ZSIsImVtYWlsIjoic29icmFsY2Fzc2lxdWVAZ21haWwuY29tIiwiaWF0IjoxNzUzMzY4MzY2LCJleHAiOjE3NTM0NTQ3NjZ9.CqPdYeFkGMxyPodQ24OPqfY0oteQmumCjTXOaAUMmOk
+

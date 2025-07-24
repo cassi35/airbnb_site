@@ -2,6 +2,7 @@ import { createAnnouncementController } from "#controllers/advertiser/announceme
 import { deleteAnnouncementController } from "#controllers/advertiser/announcement/deleteAnnouncement.js";
 import { getActiveAnnouncementsController } from "#controllers/advertiser/announcement/getActiveAnnouncements.js";
 import { getAdvertiserAnnouncementsController } from "#controllers/advertiser/announcement/getAdvertiserAnnouncements.js";
+import { getAnnouncementMetricsController } from "#controllers/advertiser/announcement/getAnnouncementMetrics.js";
 import { getAllAnnouncementsController } from "#controllers/advertiser/announcement/getAnnouncementsController.js";
 import { updateAnnouncementController } from "#controllers/advertiser/announcement/updateAnnouncement.js";
 import { defineRoutes } from "#utils/utils.js";
@@ -12,5 +13,6 @@ export default defineRoutes(app =>{
         app.patch('/:id', { preHandler: verifyAuthMiddleware }, updateAnnouncementController),
         app.get('/active', { preHandler: verifyAuthMiddleware }, getActiveAnnouncementsController),
         app.post('/create', { preHandler: verifyAuthMiddleware }, createAnnouncementController),
-        app.get('/all', { preHandler: verifyAuthMiddleware }, getAllAnnouncementsController)
+        app.get('/all', { preHandler: verifyAuthMiddleware }, getAllAnnouncementsController),
+        app.get('/metric/:id', { preHandler: verifyAuthMiddleware }, getAnnouncementMetricsController)
 })
