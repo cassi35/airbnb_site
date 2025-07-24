@@ -7,10 +7,9 @@ import { updateAnnouncementController } from "#controllers/advertiser/announceme
 import { defineRoutes } from "#utils/utils.js";
 import { verifyAuthMiddleware } from "middleware/auth.middeware";
 export default defineRoutes(app =>{
-        app.post('/', { preHandler: verifyAuthMiddleware }, createAnnouncementController),
+        app.get('/', { preHandler: verifyAuthMiddleware }, getAdvertiserAnnouncementsController),
         app.delete('/:id', {preHandler:verifyAuthMiddleware}, deleteAnnouncementController),
         app.patch('/:id', { preHandler: verifyAuthMiddleware }, updateAnnouncementController),
-        app.get('/', { preHandler: verifyAuthMiddleware }, getAdvertiserAnnouncementsController),
         app.get('/active', { preHandler: verifyAuthMiddleware }, getActiveAnnouncementsController),
         app.post('/create', { preHandler: verifyAuthMiddleware }, createAnnouncementController),
         app.get('/all', { preHandler: verifyAuthMiddleware }, getAllAnnouncementsController)
