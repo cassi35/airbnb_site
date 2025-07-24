@@ -63,8 +63,8 @@ export const categoriesTypeEnum = z.enum([
 export const statusTypeEnum = z.enum([
   "active", "inactive", "archived"
 ]);
-
-export const propertySchema: z.ZodType<Property> = z.object({
+//: z.ZodType<Property>  coloquei aqui em baixo para tipar
+export const propertySchema= z.object({
   _id: z.instanceof(ObjectId).optional(),
   hostId: z.instanceof(ObjectId),
   title: z.string({ required_error: "O título é obrigatório" })
@@ -118,3 +118,4 @@ export const propertySchema: z.ZodType<Property> = z.object({
   createdAt: z.coerce.date({ required_error: "Data de criação é obrigatória" }),
   updatedAt: z.coerce.date({ required_error: "Data de atualização é obrigatória" }),
 });
+export const partialPropertySchema = propertySchema.partial()

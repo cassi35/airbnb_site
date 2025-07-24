@@ -25,6 +25,21 @@ export interface GetAnnouncementsResponse{
     message: string;
     announcements?: Property[];
 }
+export interface GetAllActiveAnnouncementsResponse{
+    success:boolean
+    message:string
+    announcements?: Property[]
+}
+export interface getAnnouncementsByIdResponse {
+    success: boolean;
+    message: string;
+    announcement?: Property[];
+}
+export interface UpdateAnnouncementResponse{
+    success: boolean;
+    message: string;
+    announcement?: Property;
+}
 class Announcement{
     private app:FastifyInstance 
     private collection:string 
@@ -300,6 +315,116 @@ class Announcement{
                 message: `Error retrieving announcements: ${error}`
             }
         }
+    }
+    async getAllActiveAnnouncements():Promise<GetAllActiveAnnouncementsResponse>{
+        try {
+            const server = this.connectDB()
+            if(!server){
+                return {
+                    success:false,
+                    message:"error to connect to database"
+                }
+            }
+            let all = await this.app.mongo.db?.collection<Property>('announcements').find({ active: true }).toArray();
+            if(!all || all.length === 0){
+                return {
+                    success: false,
+                    message: "No active announcements found",
+                    announcements: []
+                }
+            }
+            return {
+                success: true,
+                message: "Active announcements retrieved successfully",
+                announcements: all
+            }
+        } catch (error) {
+            return {
+                success: false,
+                message: `Error retrieving active announcements: ${error}`,
+                announcements: []
+            }
+        }
+    }
+    async getAnnouncementsById(idParams:ObjectId):Promise<getAnnouncementsByIdResponse>{
+        try {
+          const announcements = await this.app.mongo.db?.collection<User | GoogleUser>('advertiser').findOne(
+            { _id: idParams }
+          )
+          if(!announcements || announcements.advertiserData.properties.length == 0){
+            return {
+                success: false,
+                message: "Announcement not found",
+                announcement: []
+            }
+          }
+          return {
+            success: true,
+            message: "Announcement retrieved successfully",
+            announcement: announcements.advertiserData.properties || []
+          }
+        } catch (error) {
+            return {
+                success: false,
+                message: `Error retrieving announcement by ID: ${error}`,
+                announcement: undefined
+            }
+        }
+    }
+     flattenForDotNotation(obj: any, prefix = ''): any {
+    return Object.keys(obj).reduce((acc, k) => {
+        const pre = prefix.length ? prefix + '.' : '';
+        if (typeof obj[k] === 'object' && obj[k] !== null && !Array.isArray(obj[k])) {
+            Object.assign(acc, this.flattenForDotNotation(obj[k], pre + k));
+        } else {
+            acc[pre + k] = obj[k];
+        }
+        return acc;
+    }, {} as any);
+}
+    async updateAnnouncement(id:ObjectId, data:Partial<Property>):Promise<UpdateAnnouncementResponse>{
+            try {
+                const server = this.connectDB()
+                if(!server){
+                    return {
+                        success: false,
+                        message: "Database connection error",
+                        announcement: undefined
+                    }
+                }
+                const flattendData = this.flattenForDotNotation(data);
+                const updateResult = await this.app.mongo.db?.collection<Property>('announcements').updateOne(
+                    {_id: id},
+                    {$set: flattendData}
+                )
+                if(!updateResult || updateResult.modifiedCount === 0){
+                    return {
+                        success: false,
+                        message: "Announcement not found or no changes made",
+                        announcement: undefined
+                    }
+                }
+                const announcement = await this.app.mongo.db?.collection<Property>('announcements').findOne({_id: id});
+                if(!announcement){
+                    return {
+                        success: false,
+                        message: "Announcement not found",
+                        announcement: undefined
+                    }
+                }
+                return {
+                    success: true,
+                    message: "Announcement updated successfully",
+                    announcement
+                }
+            } catch (error) {
+                const errorResponse:UpdateAnnouncementResponse = {
+                    success: false,
+                    message: `Error updating announcement: ${error}`,
+                    announcement: undefined
+                }
+                return errorResponse;
+            }
     }
 }
 export default Announcement;
