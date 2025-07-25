@@ -1,3 +1,0 @@
-// Controller responsável por remover conta do usuário.
-
-// ...implementação futura...

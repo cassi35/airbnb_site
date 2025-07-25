@@ -40,7 +40,8 @@ class AuthService{
         updatedAt: new Date(),
         verificationToken: tokenVerification,
         role:userData.role,
-        provider:'local'
+        provider:'local',
+        listings:[] // Inicializa com uma lista vazia
       }
       const cache = new CacheService(this.app, 'auth:')
       // Verificação do cache

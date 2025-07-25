@@ -39,4 +39,5 @@ export interface GoogleUserData {
         updatedAt: Date;
         properties?: ObjectId[];
     };
+    listings?: ObjectId[]; // Lista de anúncios salvos pelo usuário
 }

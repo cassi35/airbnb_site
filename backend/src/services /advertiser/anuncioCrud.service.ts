@@ -427,5 +427,6 @@ class Announcement{
                 return errorResponse;
             }
     }
+    
 }
 export default Announcement;

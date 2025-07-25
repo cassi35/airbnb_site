@@ -54,6 +54,7 @@ export async function googleCompleteSignupController(request:FastifyRequest<Goog
         updatedAt: new Date(),
         advertiserData:user['advertiserData'] || null,
         hostData:user['hostData'] || null,
+        listings:[]
         }
         
         await cache.clear() //limpa o cache

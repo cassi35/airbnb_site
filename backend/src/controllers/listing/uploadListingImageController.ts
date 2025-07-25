@@ -1,1 +1,0 @@
-// faz upload de imagens para a acomodação (Cloudinary).

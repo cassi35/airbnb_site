@@ -1,1 +1,0 @@
-//retorna todas as acomodações, com suporte a filtros (local, preço, tipo, data, hóspedes).

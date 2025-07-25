@@ -46,5 +46,5 @@ id?: ObjectId;
         verificationStatus: 'pending' | 'verified' | 'rejected';
         properties?: ObjectId[];
       };
-    
+    listings?:object[]
 }

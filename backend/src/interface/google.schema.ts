@@ -43,4 +43,5 @@ id?: ObjectId;
         updatedAt: Date;
         properties?:ObjectId[] 
     } | null; // ✅ Pode ser nulo se não for anunciante
+    listings?:ObjectId[] // ✅ Lista de anúncios salvos pelo usuário
 }
