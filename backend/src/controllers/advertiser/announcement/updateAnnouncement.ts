@@ -7,6 +7,7 @@ export interface UpdateAnnouncementResponse {
     success:boolean
     message:string
     announcement?: Property
+    object_error?:object
 }
 export interface UpdateAnnouncementParams extends RouteGenericInterface{
     Params:{
@@ -38,7 +39,8 @@ export async function updateAnnouncementController(request:FastifyRequest<Update
         if(!updateResponse.success){
             return reply.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
                 success: false,
-                message: updateResponse.message
+                message: updateResponse.message,
+                object_error:updateResponse.object_error
             });
         }
         return reply.status(StatusCodes.OK).send({

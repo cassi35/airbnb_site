@@ -204,14 +204,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ODEyYzA0M
 
 ### update announcement
 PATCH http://localhost:3000/announcement/6882201bccb65f1dbf77478b
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ODEyYzA0Mjc4MTZkM2UwNzg1YWI2ZSIsImVtYWlsIjoic29icmFsY2Fzc2lxdWVAZ21haWwuY29tIiwiaWF0IjoxNzUzMzY4MzY2LCJleHAiOjE3NTM0NTQ3NjZ9.CqPdYeFkGMxyPodQ24OPqfY0oteQmumCjTXOaAUMmOk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ODEyYzA0Mjc4MTZkM2UwNzg1YWI2ZSIsImVtYWlsIjoic29icmFsY2Fzc2lxdWVAZ21haWwuY29tIiwiaWF0IjoxNzUzNDUxNDg5LCJleHAiOjE3NTM1Mzc4ODl9.BXc5f7bEe-or3JFDTruT-sfrA_Px_8UFH5HLHqxmXO4
 Content-Type: application/json
 
 {
-   "advertiserData": {
-        "isAdvertiser": false,
-        "companyName": "update announcement"
-    }
+  "description":"apartamento novo true"
 } 
 // mudar o jeito de fazer ser
 // obrigatorio todos os campos 

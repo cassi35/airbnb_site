@@ -39,6 +39,7 @@ export interface UpdateAnnouncementResponse{
     success: boolean;
     message: string;
     announcement?: Property;
+    object_error?:object
 }
 class Announcement{
     private app:FastifyInstance 
@@ -400,7 +401,8 @@ class Announcement{
                 if(!updateResult || updateResult.modifiedCount === 0){
                     return {
                         success: false,
-                        message: "Announcement not found or no changes made" + updateResult + flattendData
+                        message: "Announcement not found or no changes made" ,
+                        object_error:updateResult
                     }
                 }
                 const announcement = await this.app.mongo.db?.collection<Property>('announcements').findOne({_id: id});
