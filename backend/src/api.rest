@@ -3,32 +3,20 @@ POST http://localhost:3000/auth/signup
 Content-Type: application/json
 
 {
-    "email": "sobralcassique@gmail.com",
+    "email": "automocaoemail@gmail.com",
     "password": "1234567919",
     "name": "Cassiano5",
-    "role": "advertiser",
-    "advertiserData": {
-        "isAdvertiser": true,
-        "companyName": "Minha Empresa",
-        "contactEmail": "sobralcassique@gmail.com",
-        "phone": "11999999999",
-        "businessType": "company",
-        "totalAnnouncements": 0,
-        "activeAnnouncements": 0,
-        "totalSpent": 0,
-        "status": "active",
-        "verificationStatus": "pending",
-        "properties": []
-    }
-  
+    "role": "user",
+    "provider": "local",
+    "listings":[]
 }
 ### verify email
 POST http://localhost:3000/auth/verify-email
 Content-Type: application/json
 
 {
-    "email": "sobralcassique@gmail.com",
-    "verificationToken":"89827"
+    "email": "automocaoemail@gmail.com",
+    "verificationToken":"87481"
 }
 
 ### resend verification token / signup or password
@@ -45,9 +33,9 @@ POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-    "email":"sobralcassique@gmail.com",
+    "email":"automocaoemail@gmail.com",
     "password":"1234567919",
-    "role":"advertiser"
+    "role":"user"
 }
 ### logout 
 POST http://localhost:3000/auth/logout
@@ -217,3 +205,18 @@ Content-Type: application/json
 GET http://localhost:3000/announcement/metrics/68812c0427816d3e0785ab6e
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ODEyYzA0Mjc4MTZkM2UwNzg1YWI2ZSIsImVtYWlsIjoic29icmFsY2Fzc2lxdWVAZ21haWwuY29tIiwiaWF0IjoxNzUzMzY4MzY2LCJleHAiOjE3NTM0NTQ3NjZ9.CqPdYeFkGMxyPodQ24OPqfY0oteQmumCjTXOaAUMmOk
 
+### insert announcement to listings
+POST http://localhost:3000/listing/insert/6882201bccb65f1dbf77478b
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ODc3OTA1OGMyMGYxYzA3ZjZlNGNlOSIsImVtYWlsIjoiYXV0b21vY2FvZW1haWxAZ21haWwuY29tIiwiaWF0IjoxNzUzNzA5NDI0LCJleHAiOjE3NTM3OTU4MjR9.9n_KskgPHUj-vIn3NZaUsg-7-Tf1azvnu03LHnCNiY0
+
+### romove announcement from listing 
+DELETE http://localhost:3000/listing/6882201bccb65f1dbf77478b
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ODc3OTA1OGMyMGYxYzA3ZjZlNGNlOSIsImVtYWlsIjoiYXV0b21vY2FvZW1haWxAZ21haWwuY29tIiwiaWF0IjoxNzUzNzA5NDI0LCJleHAiOjE3NTM3OTU4MjR9.9n_KskgPHUj-vIn3NZaUsg-7-Tf1azvnu03LHnCNiY0
+
+### get user list 
+GET http://localhost:3000/listing
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ODc3OTA1OGMyMGYxYzA3ZjZlNGNlOSIsImVtYWlsIjoiYXV0b21vY2FvZW1haWxAZ21haWwuY29tIiwiaWF0IjoxNzUzNzA5NDI0LCJleHAiOjE3NTM3OTU4MjR9.9n_KskgPHUj-vIn3NZaUsg-7-Tf1azvnu03LHnCNiY0
+
+### get announcement by id 
+GET http://localhost:3000/listing/6882201bccb65f1dbf77478b
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ODc3OTA1OGMyMGYxYzA3ZjZlNGNlOSIsImVtYWlsIjoiYXV0b21vY2FvZW1haWxAZ21haWwuY29tIiwiaWF0IjoxNzUzNzA5NDI0LCJleHAiOjE3NTM3OTU4MjR9.9n_KskgPHUj-vIn3NZaUsg-7-Tf1azvnu03LHnCNiY0

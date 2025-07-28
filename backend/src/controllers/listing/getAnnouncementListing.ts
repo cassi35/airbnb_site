@@ -23,8 +23,15 @@ export async function getAnnouncementsController(request:FastifyRequest<getAnnou
             })
         }
         const id_announcement = new ObjectId(id)
+        const userId = request.jwtUser?.id 
+        if(!userId){
+            return reply.status(StatusCodes.UNAUTHORIZED).send({
+                sucess:false,
+                message:'Unauthorized'
+            })
+        }
         const service = new Listing(request.server)
-        const announcement = await service.getById(id_announcement)
+        const announcement = await service.getAnnouncementOfUserList(new ObjectId(userId),id_announcement)
         if(!announcement.sucess){
             return reply.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
                 sucess:false,
