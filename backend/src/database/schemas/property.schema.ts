@@ -119,3 +119,4 @@ export const propertySchema= z.object({
   updatedAt: z.coerce.date({ required_error: "Data de atualização é obrigatória" }),
 });
 export const partialPropertySchema = propertySchema.partial()
+export const searchPropertySchema = propertySchema
