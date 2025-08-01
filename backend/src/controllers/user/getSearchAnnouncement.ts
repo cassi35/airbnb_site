@@ -53,7 +53,17 @@ export async function getSearchListingAnnouncementsController(request:FastifyReq
         } 
       const service = new UserService(request.server)
       const search = await service.searchAnnouncements(data.data)
-
+      if(!search.success){
+        return reply.status(StatusCodes.NOT_FOUND).send({
+            success: false,
+            message: search.message
+        })
+      }
+      return reply.status(StatusCodes.OK).send({
+          success: true,
+          message: "Search completed successfully",
+          announcements: search.announcements
+      })
     } catch (error) {
         return reply.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
             success: false,
