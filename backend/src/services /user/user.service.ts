@@ -35,28 +35,28 @@ class UserService implements UserServiceFunction {
     }
  async searchAnnouncements(data: searchBody): Promise<SearchAnnouncementResponse> {
      try {
-        type searchBodyTeste = {
-    location: {
-        address: string;
-        city: string;
-        state: string;
-        country: string;
-    };
-    houseRules: {
-        checkIn: string;
-        checkOut: string;
-        smokingAllowed: boolean;
-        petsAllowed: boolean;
-        partiesAllowed: boolean;
-    };
-    details: {
-        bedrooms: number;
-        bathrooms: number;
-        beds: number;
-        guests: number;
-        amenities: string[];
-    };
-};
+//         type searchBodyTeste = {
+//     location: {
+//         address: string;
+//         city: string;
+//         state: string;
+//         country: string;
+//     };
+//     houseRules: {
+//         checkIn: string;
+//         checkOut: string;
+//         smokingAllowed: boolean;
+//         petsAllowed: boolean;
+//         partiesAllowed: boolean;
+//     };
+//     details: {
+//         bedrooms: number;
+//         bathrooms: number;
+//         beds: number;
+//         guests: number;
+//         amenities: string[];
+//     };
+// };
  type DeepPartial<T> = {
   [P in keyof T]?: T[P] extends object
     ? T[P] extends Array<any>
@@ -66,19 +66,9 @@ class UserService implements UserServiceFunction {
 };
 
 
-        type OptionSearchBody = DeepPartial<searchBodyTeste>
-        const data = {
-        location: {
-            address: 'Rua XPTO'
-            // os outros campos são opcionais
-        },
-        houseRules: {
-            petsAllowed: true
-            // o resto é opcional
-        }
-        } satisfies OptionSearchBody;
-        const searchData:OptionSearchBody = {}
-        const announcements = await this.app.mongo.db?.collection<Property>('announcements').find(data).toArray()
+        type OptionSearchBody = DeepPartial<searchBody>
+        const search:OptionSearchBody = data
+        const announcements = await this.app.mongo.db?.collection<Property>('announcements').find(search).toArray()
         if (!announcements || announcements.length === 0) {
             return {
                 success: false,

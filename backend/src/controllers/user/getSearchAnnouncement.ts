@@ -11,7 +11,7 @@ export interface SearchAnnouncementResponse {
     message: string;
     announcements?: Property[]; // Array of announcements
 }
-export type searchBody = Partial<Pick<Property,'location' | 'houseRules' | 'details'>>
+export type searchBody = Pick<Property,'location' | 'houseRules' | 'details'>
 export interface SearchBody{
     Body:searchBody
 } 
@@ -21,7 +21,7 @@ const searchSchema = z.object({
     city: z.string(),
     state: z.string(),
     country: z.string(),
-  }).optional(),
+  }),
 
   houseRules: z.object({
     checkIn: z.string(),
@@ -29,7 +29,7 @@ const searchSchema = z.object({
     smokingAllowed: z.boolean(),
     petsAllowed: z.boolean(),
     partiesAllowed: z.boolean(),
-  }).optional(),
+  }),
 
   details: z.object({
     bedrooms: z.number(),
@@ -37,7 +37,7 @@ const searchSchema = z.object({
     beds: z.number(),
     guests: z.number(),
     amenities: z.array(z.string()),
-  }).optional(),
+  })
 }) satisfies z.ZodType<searchBody>;
 
 //aonde , quantos hospedes , localizacao 
