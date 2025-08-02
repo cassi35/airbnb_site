@@ -41,7 +41,7 @@ const searchSchema = z.object({
 }) satisfies z.ZodType<searchBody>;
 
 //aonde , quantos hospedes , localizacao 
-export async function getSearchListingAnnouncementsController(request:FastifyRequest<SearchBody>,reply:FastifyReply):Promise<SearchAnnouncementResponse> {
+export async function getSearchListingAnnouncementsController(request:FastifyRequest,reply:FastifyReply):Promise<SearchAnnouncementResponse> {
     try {
         const data = searchSchema.safeParse(request.body);
         if(!data.success){
