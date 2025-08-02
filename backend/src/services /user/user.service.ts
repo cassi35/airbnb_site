@@ -64,8 +64,6 @@ class UserService implements UserServiceFunction {
       : DeepPartial<T[P]>
     : T[P];
 };
-
-
         type OptionSearchBody = DeepPartial<searchBody>
         const search:OptionSearchBody = data
         const announcements = await this.app.mongo.db?.collection<Property>('announcements').find(search).toArray()
