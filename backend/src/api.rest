@@ -232,3 +232,11 @@ Content-Type: application/json
       "city": "Rio de Janeiro"
   }
 }
+### update profile user 
+PATCH http://localhost:3000/user/update 
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ODc3OTA1OGMyMGYxYzA3ZjZlNGNlOSIsImVtYWlsIjoiYXV0b21vY2FvZW1haWxAZ21haWwuY29tIiwiaWF0IjoxNzU0MzE4NzIwLCJleHAiOjE3NTQ0MDUxMjB9.e2odbU2IoZbzIR1cltbSOnVIx2cwPobhQ475sIyMvzI
+Content-Type: application/json
+
+{
+  "name":"cassinue salomao"
+}

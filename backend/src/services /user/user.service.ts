@@ -1,6 +1,8 @@
 import { DeepPartial, OptionSearchBody, SearchAnnouncementResponse, searchBody } from "#controllers/user/getSearchAnnouncement.js";
 import { UserResponse } from "#controllers/user/getUserController.js";
+import { UpdateUserResponse, UpdateUserSchema } from "#controllers/user/updateUserController.js";
 import { Property } from "#database/schemas/property.schema.js";
+import { GoogleUserData } from "#interface/google.js";
 import { GoogleUser } from "#interface/google.schema.js";
 import { User } from "@sentry/node";
 import { FastifyInstance } from "fastify";
@@ -92,6 +94,50 @@ class UserService implements UserServiceFunction {
         } satisfies SearchAnnouncementResponse
         return errorMessage
      }
+ }
+flattenForDotNotation(obj: any, prefix = ''): any {
+    return Object.keys(obj).reduce((acc, k) => {
+        const pre = prefix.length ? prefix + '.' : '';
+        if (typeof obj[k] === 'object' && obj[k] !== null && !Array.isArray(obj[k])) {
+            Object.assign(acc, this.flattenForDotNotation(obj[k], pre + k));
+        } else {
+            acc[pre + k] = obj[k];
+        }
+        return acc;
+    }, {} as any);
+}
+ async updateUserProfile(dataUpdated:object,userId:ObjectId):Promise<UpdateUserResponse>{
+    try {
+        const updateData = this.flattenForDotNotation(dataUpdated);
+        const user = await this.app.mongo.db?.collection<GoogleUser | User | GoogleUserData>('user').updateOne(
+            { _id: userId },
+            { $set: updateData }
+        )
+        if(!user || user.modifiedCount == 0){
+            return {
+                sucess: false,
+                message: "User not found or no changes made"
+            }
+        }
+        const profile = await this.app.mongo.db?.collection<GoogleUser | User>("user").findOne({ _id: userId });
+        if(!profile){
+            return {
+                sucess: false,
+                message: "User not found after update"
+            }
+        }
+        return {
+            sucess:true,
+            message: "Profile updated successfully",
+            user: profile
+        }
+    } catch (error) {
+        const errorMessage = {
+             sucess:false,
+             message:"error updating profile"
+        } satisfies UpdateUserResponse
+        return errorMessage;
+    }
  }
 }
 export default UserService

@@ -40,3 +40,9 @@ npm i @fastify/cookie
 
 manda um redis de otp temporario  
 WebSocket de conversa
+
+get ==> pegar 
+put ==> update complete 
+patch ==> update em parte 
+post ==> criar algo novo
+delete ==> deletar algo nuvo 
