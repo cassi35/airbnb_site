@@ -5,5 +5,5 @@ import { verifyAuthMiddleware } from "middleware/auth.middeware";
 
 export default defineRoutes(app=>{
     app.get('/', { preHandler: verifyAuthMiddleware }, getUserProfileController),
-    app.get('/search', { preHandler: verifyAuthMiddleware }, getSearchListingAnnouncementsController)
+    app.post('/search', { preHandler: verifyAuthMiddleware }, getSearchListingAnnouncementsController)
 })

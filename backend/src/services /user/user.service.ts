@@ -1,4 +1,4 @@
-import { SearchAnnouncementResponse, searchBody } from "#controllers/user/getSearchAnnouncement.js";
+import { DeepPartial, OptionSearchBody, SearchAnnouncementResponse, searchBody } from "#controllers/user/getSearchAnnouncement.js";
 import { UserResponse } from "#controllers/user/getUserController.js";
 import { Property } from "#database/schemas/property.schema.js";
 import { GoogleUser } from "#interface/google.schema.js";
@@ -33,7 +33,21 @@ class UserService implements UserServiceFunction {
         }
     }
     }
- async searchAnnouncements(data: searchBody): Promise<SearchAnnouncementResponse> {
+    buildMongoFilter(obj: Record<string, any>, prefix = ""): Record<string, any> {
+    const filter: Record<string, any> = {};
+    for (const key in obj) {
+        if (obj[key] !== undefined && obj[key] !== null) {
+            const path = prefix ? `${prefix}.${key}` : key;
+            if (typeof obj[key] === "object" && !Array.isArray(obj[key])) {
+                Object.assign(filter, this.buildMongoFilter(obj[key], path));
+            } else {
+                filter[path] = obj[key];
+            }
+        }
+    }
+    return filter;
+}
+ async searchAnnouncements(data: OptionSearchBody): Promise<SearchAnnouncementResponse> {
      try {
 //         type searchBodyTeste = {
 //     location: {
@@ -57,16 +71,9 @@ class UserService implements UserServiceFunction {
 //         amenities: string[];
 //     };
 // };
- type DeepPartial<T> = {
-  [P in keyof T]?: T[P] extends object
-    ? T[P] extends Array<any>
-      ? T[P]
-      : DeepPartial<T[P]>
-    : T[P];
-};
-        type OptionSearchBody = DeepPartial<searchBody>
-        const search:OptionSearchBody = data
-        const announcements = await this.app.mongo.db?.collection<Property>('announcements').find(search).toArray()
+
+        const filter = this.buildMongoFilter(data);
+        const announcements = await this.app.mongo.db?.collection<Property>('announcements').find(filter).toArray()
         if (!announcements || announcements.length === 0) {
             return {
                 success: false,

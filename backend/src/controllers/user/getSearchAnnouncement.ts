@@ -15,30 +15,38 @@ export type searchBody = Pick<Property,'location' | 'houseRules' | 'details'>
 export interface SearchBody{
     Body:searchBody
 } 
+export type DeepPartial<T> = {
+  [P in keyof T]?: T[P] extends object
+    ? T[P] extends Array<any>
+      ? T[P]
+      : DeepPartial<T[P]>
+    : T[P];
+};
+export type OptionSearchBody = DeepPartial<searchBody>
 const searchSchema = z.object({
   location: z.object({
-    address: z.string(),
-    city: z.string(),
-    state: z.string(),
-    country: z.string(),
-  }),
+    address: z.string().optional(),
+    city: z.string().optional(),
+    state: z.string().optional(),
+    country: z.string().optional(),
+  }).optional(),
 
   houseRules: z.object({
-    checkIn: z.string(),
-    checkOut: z.string(),
-    smokingAllowed: z.boolean(),
-    petsAllowed: z.boolean(),
-    partiesAllowed: z.boolean(),
-  }),
+    checkIn: z.string().optional(),
+    checkOut: z.string().optional(),
+    smokingAllowed: z.boolean().optional(),
+    petsAllowed: z.boolean().optional(),
+    partiesAllowed: z.boolean().optional(),
+  }).optional(),
 
   details: z.object({
-    bedrooms: z.number(),
-    bathrooms: z.number(),
-    beds: z.number(),
-    guests: z.number(),
-    amenities: z.array(z.string()),
-  })
-}) satisfies z.ZodType<searchBody>;
+    bedrooms: z.number().optional(),
+    bathrooms: z.number().optional(),
+    beds: z.number().optional(),
+    guests: z.number().optional(),
+    amenities: z.array(z.string()).optional(),
+  }).optional()
+}) satisfies z.ZodType<OptionSearchBody>;
 
 //aonde , quantos hospedes , localizacao 
 export async function getSearchListingAnnouncementsController(request:FastifyRequest,reply:FastifyReply):Promise<SearchAnnouncementResponse> {
