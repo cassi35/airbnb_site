@@ -1,4 +1,5 @@
 import {FastifyInstance} from 'fastify'
+import { Server } from 'socket.io';
 export type DefineRoutesHandler = (app:FastifyInstance) => Promise<void> | void
 // Definir o tipo do usuário JWT
 // Definir o tipo do usuário JWT
@@ -18,5 +19,10 @@ declare module 'fastify' {
 declare module '@fastify/jwt' {
     interface FastifyJWT {
         payload: JWTuser;
+    }
+}
+declare module 'fastify' {
+    interface FastifyInstance {
+        io:Server
     }
 }

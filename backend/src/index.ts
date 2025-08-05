@@ -15,7 +15,7 @@ import { cloundinaryConnection } from '#config/cloudinary.js'
 import { stripeConnection } from '#config/stripe.js'
 import { initSentry } from '#config/sentry.js'
 import { hooksFastify } from 'hooks/hook'
-
+import { socketIO } from '#config/socket.io.js'
 const app = fastify({logger:true}).withTypeProvider<ZodTypeProvider>()
 
 // Função assíncrona para garantir a ordem correta de inicialização
@@ -44,8 +44,8 @@ async function startServer() {
         await cloundinaryConnection(app)
         await stripeConnection()  // Certifique-se de que a função stripeConnection está importada corretamente
         await initSentry()  // Inicializar o Sentry
+        await socketIO(app)
         // 3. Registrar o swagger
-        
         app.register(connectSwagger)
         // 4. Registrar as rotas DEPOIS da conexão ao banco
         app.register(autoload, {
